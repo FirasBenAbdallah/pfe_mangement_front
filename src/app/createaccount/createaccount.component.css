@@ -1,0 +1,187 @@
+/* .CreateAccount {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #154e92;
+  font-size: 40px;
+  font-family: Inter;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.FirstName {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: #154e92;
+  font-size: 20px;
+  font-family: Inter;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.CreateAccountButton {
+  width: 300px;
+  height: 50px;
+  border-radius: 10px;
+  background: #154e92;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.SignUp {
+  display: flex;
+  width: 175px;
+  height: 50px;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+ */
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Center the container both vertically and horizontally */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Set the container width to 100% */
+  padding: 0 20px; /* Add some padding */
+  box-sizing: border-box; /* Prevent the container from taking the padding of its parent element */
+  background-color: white;
+}
+/* .container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; 
+  height: 100%; 
+  margin: 0 auto; 
+  padding: 0 20px;
+  box-sizing: border-box; 
+  background-color: white;
+} */
+
+.containerForm {
+  width: 50%;
+  margin-left: 0;
+  text-align: left; /* Align the content to the top of the page */
+  margin-right: 15px;
+}
+
+.containerImg {
+  width: 50%;
+  height: 50%;
+}
+
+.containerImg img {
+  width: 100%;
+  height: 100%;
+}
+
+.form {
+  width: 100%; /* Set the form width to 50% of the page width */
+}
+.CreateAccount {
+  text-align: center;
+  color: #154e92;
+  font-size: 40px;
+  font-family: Inter;
+  font-weight: 400;
+  word-wrap: break-word;
+  margin-bottom: 20px; /* Add some margin between the header and the form */
+}
+
+.form-field,
+.form-field-email {
+  text-align: left;
+  color: #154e92;
+  font-size: 20px;
+  font-family: Inter;
+  font-weight: 400;
+  word-wrap: break-word;
+  margin-bottom: 15px; /* Add some margin between form fields */
+}
+
+.form-field label,
+.form-field-email label {
+  display: block;
+  margin-bottom: 5px; /* Add some space below the label */
+}
+
+.form-field input {
+  width: 100%;
+  height: 50px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.CreateAccountButton {
+  width: 300px;
+  height: 50px;
+  border-radius: 10px;
+  background: #154e92;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto; /* Center the button and add some margin */
+}
+
+.SignUp {
+  color: #fff;
+  font-family: Inter;
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-row .form-field {
+  width: 45%; /* Adjust the width to your preference */
+  height: 50px; /* Fixed height */
+}
+
+.form-row .form-field input {
+  width: 100%;
+}
+
+.form-row .form-field-email {
+  width: 100%;
+  height: 50px;
+}
+
+.label {
+  color: #154e92;
+  text-align: left;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.EmailInput {
+  width: 100%;
+  height: 50px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}

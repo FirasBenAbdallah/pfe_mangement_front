@@ -1,0 +1,164 @@
+<div class="container">
+  <div class="containerForm">
+    <div class="CreateAccount">Create Account</div>
+    <form (ngSubmit)="onSubmit()" class="form">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="firstName" class="label">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            class="FirstNameInput"
+            name="firstName"
+            [(ngModel)]="formData.firstName"
+            required
+          />
+        </div>
+        <div class="form-field">
+          <label for="lastName" class="label">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            class="LastNameInput"
+            name="lastName"
+            [(ngModel)]="formData.lastName"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field-email">
+          <label for="email" class="label">Email</label>
+          <input
+            type="email"
+            id="email"
+            class="EmailInput"
+            name="email"
+            [(ngModel)]="formData.email"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="password" class="label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="PasswordInput"
+            name="password"
+            [(ngModel)]="formData.password"
+            required
+          />
+        </div>
+        <div class="form-field">
+          <label for="confirmPassword" class="label">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            class="ConfirmPasswordInput"
+            name="confirmPassword"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="type" class="label">User Type</label>
+        <input
+          type="text"
+          id="type"
+          class="TypeInput"
+          name="type"
+          [(ngModel)]="formData.type"
+          required
+        />
+      </div>
+
+      <button class="CreateAccountButton" type="submit">
+        <span class="SignUp">Sign Up</span>
+      </button>
+    </form>
+  </div>
+  <div class="containerImg">
+    <img src="../../assets/img/talan.png" alt="Talan" />
+  </div>
+</div>
+
+<!--<div class="CreateAccount">Create Account</div>
+<form (ngSubmit)="onSubmit()">
+  <div class="FirstName">First Name</div>
+  <input
+    type="text"
+    class="FirstNameInput"
+    placeholder="First Name"
+    name="firstName"
+    [(ngModel)]="formData.firstName"
+    required
+  />
+  <div class="LastName">Last Name</div>
+  <input
+    type="text"
+    class="LastNameInput"
+    placeholder="Last Name"
+    name="lastName"
+    [(ngModel)]="formData.lastName"
+    required
+  />
+  <div class="Email">Email</div>
+  <input
+    type="email"
+    class="EmailInput"
+    placeholder="Email"
+    name="email"
+    [(ngModel)]="formData.email"
+    required
+  />
+  <div class="Password">Password</div>
+  <input
+    type="password"
+    class="PasswordInput"
+    placeholder="Password"
+    name="password"
+    [(ngModel)]="formData.password"
+    required
+  />
+  <div class="ConfirmPassword">Confirm Password</div>
+  <input
+    type="password"
+    class="ConfirmPasswordInput"
+    placeholder="Confirm Password"
+    name="confirmPassword"
+    required
+  />
+  <div class="userType">User Type</div>
+  <input
+    type="text"
+    class="TypeInput"
+    placeholder="Type"
+    name="type"
+    [(ngModel)]="formData.type"
+    required
+  />
+  <br>
+  <button class="CreateAccountButton" type="submit"><span class="SignUp">Sign Up</span></button>
+  </form>
+-->
+
+<!--
+{# [(ngModel)]="firstName" #}
+{# [(ngModel)]="lastName" #}
+{# [(ngModel)]="email" #}
+[(ngModel)]="selectedGender"
+[(ngModel)]="selectedGender"
+{# <label>
+    <input type="radio" name="gender" value="encadrant">
+    Encadrant
+  </label>
+  <label>
+    <input type="radio" name="gender" value="evaluateur">
+    Evaluateur
+  </label> #}
+-->
