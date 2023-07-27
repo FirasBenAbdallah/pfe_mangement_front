@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 <div class="login-container">
   <div class="image-section">
     <img src="../../assets/img/talan.png" alt="Talan" />
@@ -61,16 +63,19 @@
       </button>
     </div>
     <div class="form-field">
-      <input type="text" placeholder="Email" />
+      <input type="text" placeholder="Email" [(ngModel)]="email"/>
     </div>
     <div class="form-field">
-      <input type="password" placeholder="Password" />
+      <input type="password" placeholder="Password" [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'"/>
+      <span class="password-icon" (click)="togglePasswordVisibility()">
+        <i class="fas" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+      </span>
     </div>
     <div class="remember-me">
       <input type="checkbox" id="rememberMe" />
       <label for="rememberMe">Remember Me</label>
     </div>
-    <button class="signin-button">
+    <button class="signin-button" (click)="onSignIn()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1em"
@@ -87,6 +92,7 @@
       </svg>
       Sign In
     </button>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div class="forgot-password">
       <span>Forgot your Password?</span>
     </div>
