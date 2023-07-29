@@ -18,7 +18,7 @@ export class CreateaccountComponent implements OnInit {
   onSubmit() {
     console.log(this.formData);
     this.http
-      .post('http://127.0.0.1:8000/user/new', { nom: this.formData.firstName, prenom:this.formData.lastName, email:this.formData.email, password:this.formData.password, role:this.formData.type})
+      .post('http://127.0.0.1:8000/users/', { nom: this.formData.firstName, prenom:this.formData.lastName, email:this.formData.email, password:this.formData.password, role:this.formData.type})
       .subscribe(
         (response) => {
           console.log('Success:', response);
