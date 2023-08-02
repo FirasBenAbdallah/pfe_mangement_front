@@ -10,9 +10,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class TableListComponent implements OnInit {
   users: any[] = [];
+  formData: any = {};
+  showAddUserForm: boolean = false; // New property to track if the add user form is visible
   showEditFormRow: boolean = false;
   editUser: any = {};
   editForm: FormGroup;
+  showPassword: boolean = false;
 
   constructor(private userService: UsersService, private formBuilder: FormBuilder, private http: HttpClient) {}
 
@@ -68,36 +71,91 @@ export class TableListComponent implements OnInit {
     this.editUser = {}; // Clear the editUser object when canceling the edit
   }
 
+  showAddForm() {
+    this.showAddUserForm = true; // Show the add user form
+  }
+
+  cancelAddForm() {
+    this.showAddUserForm = false; // Hide the add user form
+    // Reset the form data if needed
+    this.formData = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      role: ''
+    };
+  }
+
   onSubmit() {
+    const formData = this.editForm.value;
+
+    if (formData.id) {
+      // If the form data has an 'id', it means we are updating an existing user.
+      this.userService
+        .updateUser(formData)
+        .subscribe(
+          () => {
+            console.log(`User with ID ${formData.id} updated successfully.`);
+            this.showEditFormRow = false;
+            this.editUser = {};
+            this.fetchUsers(); // Fetch users again to update the table with the latest data
+          },
+          (error) => {
+            console.error(`An error occurred while updating user with ID ${formData.id}:`, error);
+          }
+        );
+    } else {
+      // If the form data does not have an 'id', it means we are adding a new user.
+      this.userService.addUser(this.formData).subscribe(
+        (response) => {
+          console.log("Success:", response);
+          this.fetchUsers();
+        },
+        (error) => {
+          console.error("Error:", error);
+        }
+      );
+    }
+
+    this.cancelAddForm();
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+  /* onSubmit() {
     const editedUser = this.editForm.value;
 
     this.userService
       .updateUser(editedUser)
-      .then(() => {
-        console.log(`User with ID ${editedUser.id} updated successfully.`);
-        this.showEditFormRow = false;
-        this.editUser = {};
-        this.fetchUsers(); // Fetch users again to update the table with the latest data
-      })
-      .catch((error) => {
-        console.error(`An error occurred while updating user with ID ${editedUser.id}:`, error);
-      });
+      .subscribe(
+        () => {
+          console.log(`User with ID ${editedUser.id} updated successfully.`);
+          this.showEditFormRow = false;
+          this.editUser = {};
+          this.fetchUsers(); // Fetch users again to update the table with the latest data
+        },
+        (error) => {
+          console.error(`An error occurred while updating user with ID ${editedUser.id}:`, error);
+        }
+      );
   }
 
-  /* onSubmit() {
-    const editedUser = this.editForm.value;
-    const userId = editedUser.id; // Assuming you have an 'id' field in the user object
+  onSubmit1() {
+    console.log(this.formData);
 
-    this.http.patch(`http://127.0.0.1:8000/users/${userId}`, editedUser).subscribe(
-      () => {
-        console.log(`User with ID ${userId} updated successfully.`);
-        this.showEditFormRow = false;
-        this.editUser = {};
-        this.fetchUsers(); // Fetch users again to update the table with the latest data
+    this.userService.addUser(this.formData).subscribe(
+      (response) => {
+        console.log("Success:", response);
+        this.fetchUsers();
       },
       (error) => {
-        console.error(`An error occurred while updating user with ID ${userId}:`, error);
+        console.error("Error:", error);
       }
     );
-  } */
+    this.cancelAddForm();
+  }
+
+   */
 }

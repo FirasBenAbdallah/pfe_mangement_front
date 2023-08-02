@@ -72,7 +72,7 @@
           id="type"
           class="TypeInput"
           name="type"
-          [(ngModel)]="formData.type"
+          [(ngModel)]="formData.role"
           required
         />
       </div>
@@ -86,79 +86,3 @@
     <img src="../../assets/img/talan.png" alt="Talan" />
   </div>
 </div>
-
-<!--<div class="CreateAccount">Create Account</div>
-<form (ngSubmit)="onSubmit()">
-  <div class="FirstName">First Name</div>
-  <input
-    type="text"
-    class="FirstNameInput"
-    placeholder="First Name"
-    name="firstName"
-    [(ngModel)]="formData.firstName"
-    required
-  />
-  <div class="LastName">Last Name</div>
-  <input
-    type="text"
-    class="LastNameInput"
-    placeholder="Last Name"
-    name="lastName"
-    [(ngModel)]="formData.lastName"
-    required
-  />
-  <div class="Email">Email</div>
-  <input
-    type="email"
-    class="EmailInput"
-    placeholder="Email"
-    name="email"
-    [(ngModel)]="formData.email"
-    required
-  />
-  <div class="Password">Password</div>
-  <input
-    type="password"
-    class="PasswordInput"
-    placeholder="Password"
-    name="password"
-    [(ngModel)]="formData.password"
-    required
-  />
-  <div class="ConfirmPassword">Confirm Password</div>
-  <input
-    type="password"
-    class="ConfirmPasswordInput"
-    placeholder="Confirm Password"
-    name="confirmPassword"
-    required
-  />
-  <div class="userType">User Type</div>
-  <input
-    type="text"
-    class="TypeInput"
-    placeholder="Type"
-    name="type"
-    [(ngModel)]="formData.type"
-    required
-  />
-  <br>
-  <button class="CreateAccountButton" type="submit"><span class="SignUp">Sign Up</span></button>
-  </form>
--->
-
-<!--
-{# [(ngModel)]="firstName" #}
-{# [(ngModel)]="lastName" #}
-{# [(ngModel)]="email" #}
-[(ngModel)]="selectedGender"
-[(ngModel)]="selectedGender"
-{# <label>
-    <input type="radio" name="gender" value="encadrant">
-    Encadrant
-  </label>
-  <label>
-    <input type="radio" name="gender" value="evaluateur">
-    Evaluateur
-  </label> #}
--->

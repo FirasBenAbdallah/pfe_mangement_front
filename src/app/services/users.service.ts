@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 import Swal from "sweetalert2";
 import { environment } from "../../environments/environment";
 
@@ -17,12 +18,22 @@ export class UsersService {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlUser}`);
   }
 
-  updateUser(user: any): Promise<any> {
-    const userId = user.id; // Assuming you have an 'id' field in the user object
+  addUser(formData: any): Observable<any> {
+    const user = {
+      nom: formData.firstName,
+      prenom: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+    };
 
-    return this.http
-      .patch(`${this.apiUrl}/${this.apiUrlUser}/${userId}`, user)
-      .toPromise();
+    return this.http.post(`${this.apiUrl}/${this.apiUrlUser}`, user);
+  }
+
+  updateUser(user: any): Observable<any> {
+    const userId = user.id; 
+
+    return this.http.patch(`${this.apiUrl}/${this.apiUrlUser}/${userId}`, user);
   }
 
   deleteUser(id: number): Promise<any> {

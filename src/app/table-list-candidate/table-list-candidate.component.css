@@ -1,0 +1,80 @@
+.edit-form {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .form-group {
+    flex: 1;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form-actions {
+    margin-top: 10px;
+  }
+  
+  .btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+  }
+  
+  .password-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+  }
+/* Add the FontAwesome icon for the plus symbol (+) and set its size to 21px by 21px */
+.floating-button i {
+    font-size: 21px;
+    width: 21px;
+    height: 21px;
+    display: inline-block;
+    text-align: center;
+    line-height: 21px;
+  }
+  
+  /* Modify the styles for the button to make it non-round */
+  .floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: red;
+    height: 41px;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    border-radius: 5px; /* Set border-radius to 0 to make the button non-round */
+  }

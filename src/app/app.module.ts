@@ -10,6 +10,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { CreateaccountComponent } from './createaccount/createaccount.component';
 import { LoginComponent } from './login/login.component';
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
