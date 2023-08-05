@@ -22,6 +22,7 @@
                   <th>Phone number</th>
                   <th>Start date</th>
                   <th>End date</th>
+                  <th>Team</th>
                   <th>Action</th>
                 </thead>
                 <tbody>
@@ -32,6 +33,17 @@
                     <td>{{ candidate.numtel }}</td>
                     <td>{{ candidate.datedebut | date : "yyyy-MM-dd" }}</td>
                     <td>{{ candidate.datefin | date : "yyyy-MM-dd" }}</td>
+                    <td>
+                      <ng-container
+                        *ngIf="
+                          candidate.team && candidate.team.nom;
+                          else noTeam
+                        "
+                      >
+                        {{ candidate.team.nom }}
+                      </ng-container>
+                      <ng-template #noTeam> No Team </ng-template>
+                    </td>
                     <td>
                       <!-- Icônes d'action pour la première ligne -->
                       <i
@@ -206,6 +218,39 @@
                             [(ngModel)]="formData.datefin"
                           />
                         </mat-form-field>
+                      </div>
+                      <!-- <div class="form-group">
+                        <label for="teamId">Team:</label>
+                        <select
+                          id="teamId"
+                          name="teamId"
+                          class="form-control"
+                          [(ngModel)]="formData.teamId"
+                        >
+                          <option
+                            *ngFor="let team of teamOptions"
+                            [value]="team.id"
+                          >
+                            {{ team.nom }}
+                          </option>
+                        </select>
+                      </div> -->
+                      <div class="form-group">
+                        <label for="teamId">Team:</label>
+                        <select
+                          id="teamId"
+                          name="teamId"
+                          class="form-control"
+                          [(ngModel)]="formData.team_id"
+                        >
+                          <option value="">No Team</option>
+                          <option
+                            *ngFor="let team of teamOptions"
+                            [value]="team.id"
+                          >
+                            {{ team.nom }}
+                          </option>
+                        </select>
                       </div>
                     </div>
                     <button

@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { CreateaccountComponent } from './createaccount/createaccount.component';
 import { LoginComponent } from './login/login.component';
+import { TableListTeamComponent } from './table-list-team/table-list-team.component';
 
 
 @NgModule({

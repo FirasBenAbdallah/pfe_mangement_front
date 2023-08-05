@@ -7,6 +7,7 @@ import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
 import { TableListCandidateComponent } from '../../table-list-candidate/table-list-candidate.component';
+import { TableListTeamComponent } from '../../table-list-team/table-list-team.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
 import { MapsComponent } from '../../maps/maps.component';
@@ -18,6 +19,7 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
+
 
 @NgModule({
   imports: [
@@ -37,6 +39,7 @@ import {MatSelectModule} from '@angular/material/select';
     UserProfileComponent,
     TableListComponent,
     TableListCandidateComponent,
+    TableListTeamComponent,
     TypographyComponent,
     IconsComponent,
     MapsComponent,

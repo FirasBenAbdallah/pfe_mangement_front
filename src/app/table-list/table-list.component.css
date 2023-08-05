@@ -79,3 +79,63 @@ label {
   border-radius: 5px;
 }
 
+/* Styles for the search container */
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.input-group {
+  flex-wrap: inherit;
+}
+
+/* Styles for the search input */
+.form-control-search {
+  border: none;
+  outline: none;
+  color: white;
+  width: 100px;
+  height: 40px;
+  background-color: transparent;
+  margin-right: 5px;
+}
+
+.form-control-search::placeholder {
+  color: white;
+}
+
+/* Styles for the user details container */
+.user-details-container {
+  width: 50%;
+}
+
+/* Styles for the user details */
+.user-details {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9; /* Set the background color for the user details */
+}
+
+/* Styles for the user details table */
+#tableUserDetails {
+  /* width: 50%; */
+  border-collapse: collapse;
+}
+
+/* Styles for the cancel button */
+.cancel-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #dc3545;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}

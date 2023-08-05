@@ -14,10 +14,12 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
+  //  Fetch all users
   fetchUsers() {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlUser}`);
   }
 
+  // Add new user
   addUser(formData: any): Observable<any> {
     const user = {
       nom: formData.firstName,
@@ -30,29 +32,44 @@ export class UsersService {
     return this.http.post(`${this.apiUrl}/${this.apiUrlUser}`, user);
   }
 
+  // Update user by ID
   updateUser(user: any): Observable<any> {
-    const userId = user.id; 
+    const userId = user.id;
 
     return this.http.patch(`${this.apiUrl}/${this.apiUrlUser}/${userId}`, user);
   }
 
-  deleteUser(id: number): Promise<any> {
-    // Change the return type to Promise<any>
-    return Swal.fire({
-      // Return the Swal.fire as a Promise
-      title: "Confirm Delete",
-      text: "Are you sure you want to delete this user?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, keep it",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        return this.http
-          .delete(`${this.apiUrl}/${this.apiUrlUser}/${id}`)
-          .toPromise(); // Use toPromise() to convert Observable to Promise
-      }
-      throw new Error("Deletion Cancelled"); // Throw an error to indicate that deletion was cancelled
+  // Delete user by ID
+  deleteUser(id: number): Observable<any> {
+    return new Observable<any>((observer) => {
+      Swal.fire({
+        title: "Confirm Delete",
+        text: "Are you sure you want to delete this user?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.http.delete(`${this.apiUrl}/${this.apiUrlUser}/${id}`).subscribe(
+            () => {
+              observer.next(); // Notify the observer that deletion is successful
+              observer.complete(); // Complete the observable
+            },
+            (error) => {
+              observer.error(error); // Notify the observer if there's an error during deletion
+            }
+          );
+        } else {
+          observer.error(new Error("Deletion Cancelled")); // Notify the observer if deletion was cancelled
+        }
+      });
     });
+  }
+
+  fetchUserByPrenomAndNom(prenom: string, nom: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}/${this.apiUrlUser}/${prenom}/${nom}`
+    );
   }
 }

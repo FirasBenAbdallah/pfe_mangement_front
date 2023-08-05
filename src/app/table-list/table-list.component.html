@@ -3,14 +3,37 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
-<!-- "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" -->
+
 <div class="main-content">
-  <div class="container-fluid">
+  <div class="container-fluid" *ngIf="showListeUsers">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header card-header-danger">
+          <div
+            class="card-header card-header-danger d-flex justify-content-between"
+          >
             <h4 class="card-title">List of users</h4>
+            <div class="search-container">
+              <form (ngSubmit)="onSearchFormSubmit(searchInput.value)">
+                <div class="input-group no-border">
+                  <input
+                    #searchInput
+                    type="text"
+                    value=""
+                    class="form-control-search p-0"
+                    placeholder="Search..."
+                  />
+                  <button
+                    mat-raised-button
+                    type="submit"
+                    class="btn btn-white btn-round btn-just-icon m-0"
+                  >
+                    <i class="material-icons">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -31,7 +54,6 @@
                     <td>{{ user.password }}</td>
                     <td>{{ user.role }}</td>
                     <td>
-                      <!-- Icônes d'action pour la première ligne -->
                       <i
                         class="fa fa-trash delete-icon"
                         style="
@@ -60,6 +82,7 @@
             <button class="floating-button" (click)="showAddForm()">
               <i class="fas fa-user-plus"></i>
             </button>
+
             <!-- Edit Form -->
             <div class="edit-form" *ngIf="showEditFormRow">
               <form [formGroup]="editForm" (submit)="onSubmit()">
@@ -223,6 +246,39 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="user-details-container mx-auto" *ngIf="displayedUser">
+    <div class="user-details">
+      <h3>User Details</h3>
+      <table class="table table-bordered" id="tableUserDetails">
+        <tbody>
+          <tr>
+            <th>Last Name</th>
+            <td>{{ displayedUser.nom }}</td>
+          </tr>
+          <tr>
+            <th>First Name</th>
+            <td>{{ displayedUser.prenom }}</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td>{{ displayedUser.email }}</td>
+          </tr>
+          <tr>
+            <th>Password</th>
+            <td>{{ displayedUser.password }}</td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td>{{ displayedUser.role }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Cancel button to hide the user details -->
+      <button class="cancel-button btn btn-danger" (click)="onCancel()">
+        <i class="fas fa-times-circle"></i> Cancel
+      </button>
     </div>
   </div>
 </div>

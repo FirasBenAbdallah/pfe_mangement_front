@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CandidatesService } from "../services/candidates.service";
+import { TeamsService } from "../services/teams.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
@@ -10,6 +11,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class TableListCandidateComponent implements OnInit {
   candidates: any[] = [];
   formData: any = {};
+  teamOptions: any[] = [];
   showAddCandidateForm: boolean = false; // New property to track if the add user form is visible
   showEditFormRow: boolean = false;
   editCandidate: any = {};
@@ -18,6 +20,7 @@ export class TableListCandidateComponent implements OnInit {
 
   constructor(
     private candidateService: CandidatesService,
+    private teamService: TeamsService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -37,19 +40,31 @@ export class TableListCandidateComponent implements OnInit {
     );
   }
 
+  fetchTeamOptions() {
+    this.teamService.fetchTeams().subscribe(
+      (response) => {
+        this.teamOptions = response;
+        console.log("Team options:", this.teamOptions);
+      },
+      (error) => {
+        console.error("Error fetching team options:", error);
+      }
+    );
+  }
+
   deleteCandidate(id: number) {
-    this.candidateService
-      .deleteCandidate(id)
-      .then(() => {
+    this.candidateService.deleteCandidate(id).subscribe(
+      () => {
         console.log(`Candidate with ID ${id} deleted successfully.`);
-        // Optionally, you can remove the deleted item from the local array
         this.candidates = this.candidates.filter(
           (candidate) => candidate.id !== id
         );
-      })
-      .catch((error) => {
-        console.error(error.message); // Handle the error if deletion was cancelled
-      });
+      },
+      (error) => {
+        console.error("Error deleting candidate:", error);
+        // Handle error here
+      }
+    );
   }
 
   initEditForm() {
@@ -63,21 +78,6 @@ export class TableListCandidateComponent implements OnInit {
       datefin: ["", Validators.required],
     });
   }
-
-  /* showEditForm(candidate: any) {
-    console.log('Editing candidate:', candidate);
-    this.showEditFormRow = true;
-    this.editCandidate = { ...candidate };
-    this.editForm.patchValue({
-      id: candidate.id,
-      nom: candidate.nom,
-      prenom: candidate.prenom,
-      email: candidate.email,
-      numtel: candidate.numtel,
-      datedebut: candidate.datedebut, // Use the correct property name from the candidate object
-      datefin: candidate.datefin     // Use the correct property name from the candidate object
-    });
-  } */
 
   showEditForm(candidate: any) {
     console.log("Editing candidate:", candidate);
@@ -122,6 +122,7 @@ export class TableListCandidateComponent implements OnInit {
 
   showAddForm() {
     this.showAddCandidateForm = true; // Show the add user form
+    this.fetchTeamOptions();
   }
 
   cancelAddForm() {
@@ -154,24 +155,24 @@ export class TableListCandidateComponent implements OnInit {
         );
       }
     );
-
-    /* this.candidateService
-      .updateCandidate(editedCandidate)
-      .then(() => {
-        console.log(`Candidate with ID ${editedCandidate.id} updated successfully.`);
-        this.showEditFormRow = false;
-        this.editCandidate = {};
-        this.fetchCandidates(); // Fetch users again to update the table with the latest data
-      })
-      .catch((error) => {
-        console.error(`An error occurred while updating candidate with ID ${editedCandidate.id}:`, error);
-      }); */
   }
 
   onSubmit1() {
-    console.log(this.formData);
+    const numtelAsInt = parseInt(this.formData.numtel, 10);
+    const formDataWithIntNumtel = { ...this.formData, numtel: numtelAsInt };
 
-    this.candidateService.addCandidate(this.formData).subscribe(
+    // Extract the selected team ID from the form data
+    const teamId = this.formData.team_id ? this.formData.team_id : null;
+
+    // Include the selected team ID in the candidate data
+    const candidateData = {
+      ...formDataWithIntNumtel,
+      team_id: teamId,
+    };
+
+    console.log(candidateData);
+
+    this.candidateService.addCandidate(candidateData).subscribe(
       (response) => {
         console.log("Success:", response);
         this.fetchCandidates();
@@ -180,6 +181,7 @@ export class TableListCandidateComponent implements OnInit {
         console.error("Error:", error);
       }
     );
+
     this.cancelAddForm();
   }
 }

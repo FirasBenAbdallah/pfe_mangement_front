@@ -8,45 +8,37 @@ import { map } from "rxjs/operators";
 @Injectable({
   providedIn: "root",
 })
-export class CandidatesService {
-  candidates: any[] = [];
-  private apiUrlCandidate = "candidates";
+export class TeamsService {
+  teams: any[] = [];
+  private apiUrlTeam = "teams";
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  fetchCandidates() {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlCandidate}`);
+  fetchTeams() {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlTeam}`);
   }
 
-  addCandidate(formData: any): Observable<any> {
-    const candidate = {
-      nom: formData.firstName,
-      prenom: formData.lastName,
-      email: formData.email,
-      numtel: formData.numtel,
-      datedebut: formData.datedebut,
-      datefin: formData.datefin,
-      team_id: formData.team_id,
+  addTeam(formData: any): Observable<any> {
+    const team = {
+      nom: formData.nom,
+      taille: formData.taille,
     };
 
-    return this.http.post(`${this.apiUrl}/${this.apiUrlCandidate}`, candidate);
+    return this.http.post(`${this.apiUrl}/${this.apiUrlTeam}`, team);
   }
 
-  updateCandidate(candidate: any): Observable<any> {
-    const candidateId = candidate.id;
+  updateTeam(team: any): Observable<any> {
+    const teamId = team.id;
 
-    return this.http.patch(
-      `${this.apiUrl}/${this.apiUrlCandidate}/${candidateId}`,
-      candidate
-    );
+    return this.http.patch(`${this.apiUrl}/${this.apiUrlTeam}/${teamId}`, team);
   }
 
-  deleteCandidate(id: number): Observable<any> {
+  deleteTeam(id: number): Observable<any> {
     return new Observable((observer) => {
       Swal.fire({
         title: "Confirm Delete",
-        text: "Are you sure you want to delete this candidate?",
+        text: "Are you sure you want to delete this user?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
@@ -55,7 +47,7 @@ export class CandidatesService {
         if (result.isConfirmed) {
           // Use the map operator to return the result of the HTTP delete request
           this.http
-            .delete(`${this.apiUrl}/${this.apiUrlCandidate}/${id}`)
+            .delete(`${this.apiUrl}/${this.apiUrlTeam}/${id}`)
             .pipe(
               map((response) => {
                 // Resolve the observer with the response data
@@ -70,5 +62,11 @@ export class CandidatesService {
         }
       });
     });
+  }
+
+  fetchTeamByName(nom: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}/${this.apiUrlTeam}/${nom}`
+    );
   }
 }
