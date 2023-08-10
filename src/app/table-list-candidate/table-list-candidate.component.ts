@@ -17,6 +17,7 @@ export class TableListCandidateComponent implements OnInit {
   editCandidate: any = {};
   editForm: FormGroup;
   showPassword: boolean = false;
+  teams: any[] = [];
 
   constructor(
     private candidateService: CandidatesService,
@@ -27,6 +28,14 @@ export class TableListCandidateComponent implements OnInit {
   ngOnInit() {
     this.fetchCandidates();
     this.initEditForm();
+    this.teamService.fetchTeams().subscribe(
+      (teams) => {
+        this.teams = teams;
+      },
+      (error) => {
+        console.error('Error fetching teams:', error);
+      }
+    );
   }
 
   fetchCandidates() {
@@ -76,6 +85,7 @@ export class TableListCandidateComponent implements OnInit {
       numtel: ["", Validators.required],
       datedebut: ["", Validators.required],
       datefin: ["", Validators.required],
+      team_id: ["", Validators.required],
     });
   }
 
@@ -112,6 +122,7 @@ export class TableListCandidateComponent implements OnInit {
       numtel: candidate.numtel,
       datedebut: formattedStartDate,
       datefin: formattedEndDate,
+      team_id: candidate.team_id
     });
   }
 
@@ -135,53 +146,50 @@ export class TableListCandidateComponent implements OnInit {
       numtel: "",
       datedebut: "",
       datefin: "",
+      team_id:""
     };
   }
 
-  onSubmit() {
-    const editedCandidate = this.editForm.value;
-
-    this.candidateService.updateCandidate(editedCandidate).subscribe(
-      () => {
-        console.log(`User with ID ${editedCandidate.id} updated successfully.`);
-        this.showEditFormRow = false;
-        this.editCandidate = {};
-        this.fetchCandidates(); // Fetch users again to update the table with the latest data
-      },
-      (error) => {
-        console.error(
-          `An error occurred while updating user with ID ${editedCandidate.id}:`,
-          error
-        );
-      }
-    );
-  }
-
-  onSubmit1() {
-    const numtelAsInt = parseInt(this.formData.numtel, 10);
-    const formDataWithIntNumtel = { ...this.formData, numtel: numtelAsInt };
-
-    // Extract the selected team ID from the form data
-    const teamId = this.formData.team_id ? this.formData.team_id : null;
-
-    // Include the selected team ID in the candidate data
-    const candidateData = {
-      ...formDataWithIntNumtel,
-      team_id: teamId,
-    };
-
-    console.log(candidateData);
-
-    this.candidateService.addCandidate(candidateData).subscribe(
-      (response) => {
-        console.log("Success:", response);
-        this.fetchCandidates();
-      },
-      (error) => {
-        console.error("Error:", error);
-      }
-    );
-
+  onSubmit(isEditing: boolean) {
+    let candidateData;
+  
+    if (isEditing) {
+      const editedCandidate = this.editForm.value;
+      this.candidateService.updateCandidate(editedCandidate).subscribe(
+        () => {
+          console.log(`User with ID ${editedCandidate.id} updated successfully.`);
+          this.showEditFormRow = false;
+          this.editCandidate = {};
+          this.fetchCandidates();
+        },
+        (error) => {
+          console.error(
+            `An error occurred while updating user with ID ${editedCandidate.id}:`,
+            error
+          );
+        }
+      );
+    } else {
+      const numtelAsInt = parseInt(this.formData.numtel, 10);
+      const formDataWithIntNumtel = { ...this.formData, numtel: numtelAsInt };
+      
+      const teamId = this.formData.team_id ? this.formData.team_id : null;
+      
+      candidateData = {
+        ...formDataWithIntNumtel,
+        team_id: teamId,
+      };
+      
+      this.candidateService.addCandidate(candidateData).subscribe(
+        (response) => {
+          console.log("Success:", response);
+          this.fetchCandidates();
+        },
+        (error) => {
+          console.error("Error:", error);
+        }
+      );
+    }
     this.cancelAddForm();
   }
 }

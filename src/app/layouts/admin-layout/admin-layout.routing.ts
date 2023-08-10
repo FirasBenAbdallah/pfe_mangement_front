@@ -1,67 +1,21 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
 
-import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { UserProfileComponent } from '../../user-profile/user-profile.component';
-import { TableListComponent } from '../../table-list/table-list.component';
-import { TableListCandidateComponent } from '../../table-list-candidate/table-list-candidate.component';
-import { TableListTeamComponent } from '../../table-list-team/table-list-team.component';
-import { TypographyComponent } from '../../typography/typography.component';
-import { IconsComponent } from '../../icons/icons.component';
-import { MapsComponent } from '../../maps/maps.component';
-import { NotificationsComponent } from '../../notifications/notifications.component';
-import { UpgradeComponent } from '../../upgrade/upgrade.component';
+import { DashboardComponent } from "../../dashboard/dashboard.component";
+import { UserProfileComponent } from "../../user-profile/user-profile.component";
+import { TableListComponent } from "../../table-list/table-list.component";
+import { TableListCandidateComponent } from "../../table-list-candidate/table-list-candidate.component";
+import { TableListTeamComponent } from "../../table-list-team/table-list-team.component";
+import { TableListSchoolYearComponent } from "../../table-list-school-year/table-list-school-year.component";
+import { TableListSubjectComponent } from "../../table-list-subject/table-list-subject.component";
+import { LogoutComponent } from "app/logout/logout.component";
 
 export const AdminLayoutRoutes: Routes = [
-    // {
-    //   path: '',
-    //   children: [ {
-    //     path: 'dashboard',
-    //     component: DashboardComponent
-    // }]}, {
-    // path: '',
-    // children: [ {
-    //   path: 'userprofile',
-    //   component: UserProfileComponent
-    // }]
-    // }, {
-    //   path: '',
-    //   children: [ {
-    //     path: 'icons',
-    //     component: IconsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'notifications',
-    //         component: NotificationsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'maps',
-    //         component: MapsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'typography',
-    //         component: TypographyComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'upgrade',
-    //         component: UpgradeComponent
-    //     }]
-    // }
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'user-profile',   component: UserProfileComponent },
-    { path: 'table-list',     component: TableListComponent },
-    { path: 'table-list-candidate',     component: TableListCandidateComponent },
-    { path: 'table-list-team',     component: TableListTeamComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'maps',           component: MapsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent },
+  { path: "dashboard", component: DashboardComponent },
+  { path: "user-profile", component: UserProfileComponent },
+  { path: "table-list", component: TableListComponent },
+  { path: "table-list-candidate", component: TableListCandidateComponent },
+  { path: "table-list-team", component: TableListTeamComponent },
+  { path: "table-list-school-year", component: TableListSchoolYearComponent },
+  { path: "table-list-subject", component: TableListSubjectComponent },
+  { path: "logout", component: LogoutComponent},
 ];

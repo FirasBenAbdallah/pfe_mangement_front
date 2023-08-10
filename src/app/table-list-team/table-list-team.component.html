@@ -3,6 +3,12 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
 />
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+  crossorigin="anonymous"
+/>
 
 <div class="main-content">
   <div class="container-fluid">
@@ -18,12 +24,24 @@
                 <thead class="text-primary">
                   <th>Name</th>
                   <th>Size</th>
+                  <th>Subject</th>
                   <th>Action</th>
                 </thead>
                 <tbody>
                   <tr *ngFor="let team of teams">
                     <td>{{ team.nom }}</td>
                     <td>{{ team.taille }}</td>
+                    <td>
+                      <ng-container
+                        *ngIf="
+                          team.subject && team.subject.libelle;
+                          else noTeam
+                        "
+                      >
+                        {{ team.subject.libelle }}
+                      </ng-container>
+                      <ng-template #noTeam> No Team </ng-template>
+                    </td>
                     <td>
                       <!-- Icônes d'action pour la première ligne -->
                       <i
@@ -52,49 +70,91 @@
             </div>
 
             <button class="floating-button" (click)="showAddForm()">+</button>
-            <!-- Edit Form -->
-            <div class="edit-form" *ngIf="showEditFormRow">
-              <form [formGroup]="editForm" (submit)="onSubmit()">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="nom"
-                      required
-                    />
+
+            <!-- Modal Edit -->
+            <div class="overlay" [ngClass]="{ show: showEditFormRow }"></div>
+            <div
+              class="modal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+              [ngClass]="{ show: showEditFormRow }"
+              *ngIf="showEditFormRow"
+              style="display: block"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Edit Team</h5>
+                    <button
+                      type="button"
+                      class="close"
+                      aria-label="Close"
+                      (click)="cancelEdit()"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
-                  <div class="form-group">
-                    <label>Size:</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="taille"
-                      required
-                    />
+                  <div class="modal-body">
+                    <form [formGroup]="editForm">
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label>Name:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="nom"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label>Size:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="taille"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Subject:</label>
+                        <!--select class="form-control" formControlName="subject_id">
+                          <option value="" disabled>Select a subject</option>
+                          <option *ngFor="let subject of subjects" [value]="subject.id">
+                            {{ subject.libelle }}
+                          </option>
+                        </select-->
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="cancelEdit()"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      form="editForm"
+                      (click)="onSubmit(true)"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary pull-right">
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    (click)="cancelEdit()"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
 
             <!-- Add Form -->
             <div *ngIf="showAddTeamForm" class="col-md-8 mx-auto">
               <div class="card">
                 <div class="card-body" style="background-color: #f9f9f9">
-                  <form (ngSubmit)="onSubmit()">
+                  <form (ngSubmit)="onSubmit(false)">
                     <div class="row">
                       <div class="col-md-4">
                         <mat-form-field class="example-full-width">
@@ -116,9 +176,24 @@
                           />
                         </mat-form-field>
                       </div>
+                      <div class="form-group">
+                        <label for="subjectId">Subject:</label>
+                        <!--select
+                          id="subjectId"
+                          name="subjectId"
+                          class="form-control"
+                          [(ngModel)]="formData.subject_id"
+                        >
+                          <option value="">No Subject</option>
+                          <option
+                            *ngFor="let subject of subjectOptions"
+                            [value]="subject.id"
+                          >
+                            {{ subject.libelle }}
+                          </option>
+                        </select-->
+                      </div>
                     </div>
-                    
-                   
                     <button
                       mat-raised-button
                       type="submit"

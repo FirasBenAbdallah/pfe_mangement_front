@@ -1,0 +1,130 @@
+<!-- Add the FontAwesome icon library -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>
+
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">List of school Years</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class="text-primary">
+                  <th>Year</th>
+                  <th>Action</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let schoolyear of schoolyears">
+                    <td>{{ schoolyear.annee }}</td>
+
+                    <td>
+                      <!-- Icônes d'action pour la première ligne -->
+                      <i
+                        class="fa fa-trash delete-icon"
+                        style="
+                          font-size: 24px;
+                          color: red;
+                          cursor: pointer;
+                          margin-right: 10px;
+                        "
+                        (click)="deleteSchoolYear(schoolyear.id)"
+                      >
+                      </i>
+                      <i
+                        class="fa fa-edit edit-icon"
+                        style="font-size: 24px; color: red; cursor: pointer"
+                        (click)="showEditForm(schoolyear)"
+                      ></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="schoolyears.length === 0">
+                    <td colspan="6">no records found</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button class="floating-button" (click)="openModal()">+</button>
+            <!-- Edit Form -->
+            <div class="edit-form" *ngIf="showEditFormRow">
+              <form [formGroup]="editForm" (submit)="onSubmit(true)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Year:</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="annee"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary pull-right">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="cancelEdit()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Add Form -->
+            <div *ngIf="showAddSchoolYearForm" class="col-md-8 mx-auto">
+              <div class="card">
+                <div class="card-body" style="background-color: #f9f9f9">
+                  <form (ngSubmit)="onSubmit(false)">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                          <input
+                            matInput
+                            placeholder="Year"
+                            type="number"
+                            [(ngModel)]="formData.annee"
+                            min="2020"
+                            max="2100"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <button
+                      mat-raised-button
+                      type="submit"
+                      class="btn pull-right"
+                      style="background-color: #007bff"
+                    >
+                      Add School Year
+                    </button>
+                    <button
+                      mat-raised-button
+                      type="button"
+                      class="btn pull-right"
+                      style="background-color: #6c757d; color: #fff"
+                      (click)="cancelAddForm()"
+                    >
+                      Cancel
+                    </button>
+                    <div class="clearfix"></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

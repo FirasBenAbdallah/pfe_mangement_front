@@ -25,7 +25,7 @@ const routes: Routes =[
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent }, // Define the route for the dashboard
   { path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route to login
-  { path: '**', redirectTo: '/login' },
+  // { path: '**', redirectTo: '/login' },
 ];
 
 @NgModule({

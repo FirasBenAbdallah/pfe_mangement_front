@@ -13824,15 +13824,6 @@ label {
   margin-top: 0;
   min-height: 740px; }
 
-#notifications {
-  background-color: #fff;
-  display: block;
-  width: 100%;
-  position: relative; }
-
-#notifications .alert-danger {
-  margin-bottom: 0px; }
-
 .tim-note {
   text-transform: capitalize; }
 

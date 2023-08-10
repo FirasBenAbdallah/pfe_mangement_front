@@ -60,12 +60,17 @@ export class TableListTeamComponent implements OnInit {
     console.log("Editing team:", team);
     this.showEditFormRow = true;
     this.editTeam = { ...team };
-    this.editForm.patchValue(team); // Patch the form with the user data
+    this.editForm.patchValue(team); // Patch the form with the team data
   }
 
-  cancelEdit() {
+  /* cancelEdit() {
     this.showEditFormRow = false;
     this.editTeam = {}; // Clear the editUser object when canceling the edit
+  } */
+  cancelEdit() {
+    this.showEditFormRow = false;
+    this.editTeam = {};
+    this.editForm.reset(); // Reset the edit form
   }
 
   showAddForm() {
@@ -78,31 +83,44 @@ export class TableListTeamComponent implements OnInit {
     this.formData = {
       nom: "",
       taille: "",
+      subject_id: "",
     };
   }
 
-  onSubmit() {
+  onSubmit(isEditing: Boolean) {
     const formData = this.editForm.value;
+    let teamData;
 
-    if (formData.id) {
-      // If the form data has an 'id', it means we are updating an existing team.
-      this.teamService.updateTeam(formData).subscribe(
+    if (isEditing) {
+      const editedTeam = this.editForm.value;
+      this.teamService.updateTeam(editedTeam).subscribe(
         () => {
-          console.log(`Team with ID ${formData.id} updated successfully.`);
+          console.log("Team with ID ${editedTeam.id} updated successfully.");
           this.showEditFormRow = false;
           this.editTeam = {};
-          this.fetchTeams(); // Fetch teams again to update the table with the latest data
+          this.fetchTeams();
         },
         (error) => {
           console.error(
-            `An error occurred while updating team with ID ${formData.id}:`,
+            "An error occurred while updating user with ID ${editedTeam.id}:",
             error
           );
         }
       );
     } else {
-      // If the form data does not have an 'id', it means we are adding a new user.
-      this.teamService.addTeam(this.formData).subscribe(
+      const numtelAsInt = parseInt(this.formData.numtel, 10);
+      const formDataWithIntNumtel = { ...this.formData, numtel: numtelAsInt };
+
+      const subjectId = this.formData.subject_id
+        ? this.formData.subject_id
+        : null;
+
+      teamData = {
+        ...formDataWithIntNumtel,
+        subject_id: subjectId,
+      };
+
+      this.teamService.addTeam(teamData).subscribe(
         (response) => {
           console.log("Success:", response);
           this.fetchTeams();
@@ -111,8 +129,8 @@ export class TableListTeamComponent implements OnInit {
           console.error("Error:", error);
         }
       );
-    }
 
-    this.cancelAddForm();
+      this.cancelAddForm();
+    }
   }
 }

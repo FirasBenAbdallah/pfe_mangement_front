@@ -84,165 +84,241 @@
             </button>
 
             <!-- Edit Form -->
-            <div class="edit-form" *ngIf="showEditFormRow">
-              <form [formGroup]="editForm" (submit)="onSubmit()">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Last Name:</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="nom"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>First Name:</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="prenom"
-                      required
-                    />
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Email:</label>
-                    <input
-                      type="email"
-                      class="form-control"
-                      formControlName="email"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Password:</label>
-                    <span
-                      class="password-icon"
-                      (click)="togglePasswordVisibility()"
-                    >
-                      <i
-                        class="fas"
-                        [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
-                      ></i>
-                    </span>
-                    <input
-                      type="password"
-                      class="form-control"
-                      formControlName="password"
-                      [type]="showPassword ? 'text' : 'password'"
-                      required
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Role:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="role"
-                    required
-                  />
-                </div>
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary pull-right">
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    (click)="cancelEdit()"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <!-- Add Form -->
-            <div *ngIf="showAddUserForm" class="col-md-8 mx-auto">
-              <div class="card">
-                <div class="card-body" style="background-color: #f9f9f9">
-                  <form (ngSubmit)="onSubmit()">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Fist Name"
-                            type="text"
-                            [(ngModel)]="formData.firstName"
-                          />
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Last Name"
-                            type="text"
-                            [(ngModel)]="formData.lastName"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-5">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Email address"
-                            type="email"
-                            [(ngModel)]="formData.email"
-                          />
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Password"
-                            type="password"
-                            [(ngModel)]="formData.password"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Role"
-                            type="text"
-                            [(ngModel)]="formData.role"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+            <div class="overlay" [ngClass]="{ show: showEditFormRow }"></div>
+            <div
+              class="modal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+              [ngClass]="{ show: showEditFormRow }"
+              *ngIf="showEditFormRow"
+              style="display: block"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Edit User</h5>
                     <button
-                      mat-raised-button
-                      type="submit"
-                      class="btn pull-right"
-                      style="background-color: #007bff"
+                      type="button"
+                      class="close"
+                      aria-label="Close"
+                      (click)="cancelEdit()"
                     >
-                      Add User
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form [formGroup]="editForm">
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label>Last Name:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="nom"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label>First Name:</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="prenom"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label>Email:</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            formControlName="email"
+                            required
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label>Password:</label>
+                          <span
+                            class="password-icon"
+                            (click)="togglePasswordVisibility()"
+                          >
+                            <i
+                              class="fas"
+                              [ngClass]="
+                                showPassword ? 'fa-eye' : 'fa-eye-slash'
+                              "
+                            ></i>
+                          </span>
+                          <input
+                            type="password"
+                            class="form-control"
+                            formControlName="password"
+                            [type]="showPassword ? 'text' : 'password'"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Role:</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="role"
+                          required
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="cancelEdit()"
+                    >
+                      Cancel
                     </button>
                     <button
-                      mat-raised-button
+                      type="submit"
+                      class="btn btn-primary"
+                      form="editForm"
+                      (click)="onSubmit(true)"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="edit-form" *ngIf="showEditFormRow">
+              
+            </div> -->
+
+            <!-- Add Form -->
+            <div class="overlay" [ngClass]="{ show: showAddUserForm }"></div>
+            <div
+              class="modal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+              [ngClass]="{ show: showAddUserForm }"
+              *ngIf="showAddUserForm"
+              style="display: block"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Add User</h5>
+                    <button
                       type="button"
-                      class="btn pull-right"
-                      style="background-color: #6c757d; color: #fff"
+                      class="close"
+                      aria-label="Close"
+                      (click)="cancelAddForm()"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field class="example-full-width">
+                            <input
+                              matInput
+                              placeholder="Fist Name"
+                              type="text"
+                              [(ngModel)]="formData.firstName"
+                            />
+                            <div class="text-danger">{{ inputFieldErrors['firstName'] }}</div>
+                          </mat-form-field>
+                          
+                        </div>
+                        <div class="col-md-4">
+                          <mat-form-field class="example-full-width">
+                            <input
+                              matInput
+                              placeholder="Last Name"
+                              type="text"
+                              [(ngModel)]="formData.lastName"
+                            />
+                          </mat-form-field>
+                          <div class="text-danger">{{ inputFieldErrors['lastName'] }}</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-5">
+                          <mat-form-field class="example-full-width">
+                            <input
+                              matInput
+                              placeholder="Email address"
+                              type="email"
+                              [(ngModel)]="formData.email"
+                            />
+                          </mat-form-field>
+                          <div class="text-danger">{{ inputFieldErrors['email'] }}</div>
+                        </div>
+                        <div class="col-md-4">
+                          <mat-form-field class="example-full-width">
+                            <input
+                              matInput
+                              placeholder="Password"
+                              type="password"
+                              [(ngModel)]="formData.password"
+                            />
+                          </mat-form-field>
+                          <div class="text-danger">{{ inputFieldErrors['password'] }}</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field class="example-full-width">
+                            <input
+                              matInput
+                              placeholder="Role"
+                              type="text"
+                              [(ngModel)]="formData.role"
+                            />
+                          </mat-form-field>
+                          <div class="text-danger">{{ inputFieldErrors['role'] }}</div>
+                        </div>
+                      </div>
+                      <div class="clearfix"></div>
+                    </form>
+                    <div *ngIf="errorMessage" class="text-danger">
+                      {{ errorMessage }}
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
                       (click)="cancelAddForm()"
                     >
                       Cancel
                     </button>
-                    <div class="clearfix"></div>
-                  </form>
+                    <button
+                      type="submit"
+                      class="btn btn-primary"
+                      form="editForm"
+                      (click)="onSubmit(false)"
+                    >
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
+            <!-- <div *ngIf="showAddUserForm" class="col-md-8 mx-auto">
+              <div class="card">
+                <div class="card-body" style="background-color: #f9f9f9">
+                  
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
       </div>

@@ -12,26 +12,36 @@ export class LoginComponent implements OnInit {
   password: string = "";
   errorMessage: string = "";
   showPassword: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedPassword = localStorage.getItem("rememberedPassword");
+
+    if (rememberedEmail && rememberedPassword) {
+      this.email = rememberedEmail;
+      this.password = rememberedPassword;
+      this.rememberMe = true;
+    }
+  }
 
   onSignIn() {
-    this.authService.login(this.email, this.password).subscribe(
-      (response) => {
-        // Handle successful login here, e.g., redirect to another page
-        console.log("Login successful", response);
-
-        // Redirect to dashboard
-        this.router.navigate(["/dashboard"]);
-      },
-      (error) => {
-        // Handle login error here, e.g., display error message
-        this.errorMessage = "Invalid email or password.";
-        console.error("Login error", error);
-      }
-    );
+    this.authService
+      .login(this.email, this.password, this.rememberMe)
+      .subscribe(
+        (response) => {
+          // Handle successful login here, e.g., redirect to another page
+          console.log("Login successful", response);
+          this.router.navigate(["/dashboard"]);
+        },
+        (error) => {
+          // Handle login error here, e.g., display error message
+          this.errorMessage = "Invalid email or password.";
+          console.error("Login error", error);
+        }
+      );
   }
 
   togglePasswordVisibility() {

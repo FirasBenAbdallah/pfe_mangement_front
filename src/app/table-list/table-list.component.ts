@@ -12,6 +12,8 @@ export class TableListComponent implements OnInit {
   formData: any = {};
   editUser: any = {};
   editForm: FormGroup;
+  errorMessage: string | null = null;
+  inputFieldErrors: { [key: string]: string } = {};
   showPassword: boolean = false; // New property to track if the password is visible
   showAddUserForm: boolean = false; // New property to track if the add user form is visible
   showEditFormRow: boolean = false; // New property to track if the edit user form is visible
@@ -142,10 +144,10 @@ export class TableListComponent implements OnInit {
   }
 
   // Submit the form
-  onSubmit() {
+  onSubmit(isEditing: boolean) {
     const formData = this.editForm.value;
 
-    if (formData.id) {
+    if (/* formData.id */ isEditing) {
       // If the form data has an 'id', it means we are updating an existing user.
       this.userService.updateUser(formData).subscribe(
         () => {
@@ -159,6 +161,7 @@ export class TableListComponent implements OnInit {
             `An error occurred while updating user with ID ${formData.id}:`,
             error
           );
+          this.errorMessage = error.error.message;
         }
       );
     } else {
@@ -167,13 +170,34 @@ export class TableListComponent implements OnInit {
         (response) => {
           console.log("Success:", response);
           this.fetchUsers();
+          this.errorMessage = null; // Clear any previous error message on success
+          this.inputFieldErrors = {};
+          this.cancelAddForm();
         },
         (error) => {
           console.error("Error:", error);
+          if (error.error.errors && Array.isArray(error.error.errors)) {
+            this.errorMessage = error.error.errors[0]; // Set the first error message from the array
+            console.log("Error message:", this.errorMessage);
+            this.inputFieldErrors = error.error.errors.reduce(
+              (acc, errorMessage) => {
+                if (errorMessage.propertyPath) {
+                  acc[errorMessage.propertyPath] = errorMessage.message;
+                  console.log(acc);
+                }
+                console.log(acc);
+                return acc;
+              },
+              {}
+            );
+          } else {
+            this.errorMessage = "An error occurred during form submission."; // Fallback error message
+            console.log("Error message:", this.errorMessage);
+          }
         }
       );
     }
 
-    this.cancelAddForm();
+    // this.cancelAddForm();
   }
 }

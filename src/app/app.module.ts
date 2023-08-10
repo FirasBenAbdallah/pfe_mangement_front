@@ -9,8 +9,7 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { CreateaccountComponent } from './createaccount/createaccount.component';
 import { LoginComponent } from './login/login.component';
-import { TableListTeamComponent } from './table-list-team/table-list-team.component';
-
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   imports: [
@@ -27,6 +26,7 @@ import { TableListTeamComponent } from './table-list-team/table-list-team.compon
     AdminLayoutComponent,
     CreateaccountComponent,
     LoginComponent,
+    ModalComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]
