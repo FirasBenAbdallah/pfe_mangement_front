@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { CreateaccountComponent } from './createaccount/createaccount.component';
 import { LoginComponent } from './login/login.component';
-import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   imports: [
@@ -26,7 +25,6 @@ import { ModalComponent } from './modal/modal.component';
     AdminLayoutComponent,
     CreateaccountComponent,
     LoginComponent,
-    ModalComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

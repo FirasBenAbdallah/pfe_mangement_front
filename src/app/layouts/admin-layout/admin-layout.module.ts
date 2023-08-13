@@ -17,7 +17,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import { LogoutComponent } from 'app/logout/logout.component';
-// import { ModalComponent } from 'app/modal/modal.component';
+import { ModalComponent } from 'app/modal/modal.component';
 
 
 @NgModule({
@@ -42,7 +42,7 @@ import { LogoutComponent } from 'app/logout/logout.component';
     TableListSchoolYearComponent,
     TableListSubjectComponent,
     LogoutComponent,
-    // ModalComponent
+    ModalComponent
   ]
 })
 

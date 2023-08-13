@@ -1,7 +1,12 @@
-import { Component, OnInit } from "@angular/core";
-import { UsersService } from "../services/users.service";
+// Import dependencies
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+// Import Components
+import { UsersService } from "../services/users.service";
+import { ModalComponent } from "../modal/modal.component";
 
+// Component metadata
 @Component({
   selector: "app-table-list",
   templateUrl: "./table-list.component.html",
@@ -15,17 +20,27 @@ export class TableListComponent implements OnInit {
   errorMessage: string | null = null;
   inputFieldErrors: { [key: string]: string } = {};
   showPassword: boolean = false; // New property to track if the password is visible
-  showAddUserForm: boolean = false; // New property to track if the add user form is visible
   showEditFormRow: boolean = false; // New property to track if the edit user form is visible
   showListeUsers: boolean = true; // New property to track if the liste users form is visible
   isTableVisible = false; // To control the visibility of the table
   displayedUser: any; // To store the displayed user data
 
+  // New properties to hold the template references
+  @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
+  @ViewChild("addFormTitle") addFormTitle: TemplateRef<any>;
+  @ViewChild("addFormSaveButton") addFormSaveButton: TemplateRef<any>;
+  @ViewChild("editFormTemplate") editFormTemplate: TemplateRef<any>;
+  @ViewChild("editFormTitle") editFormTitle: TemplateRef<any>;
+  @ViewChild("editFormSaveButton") editFormSaveButton: TemplateRef<any>;
+
+  // Component constructor
   constructor(
     private userService: UsersService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private modalService: NgbModal
   ) {}
 
+  // Component initialization logic
   ngOnInit() {
     this.fetchUsers();
     this.initEditForm();
@@ -82,12 +97,14 @@ export class TableListComponent implements OnInit {
     );
   }
 
+  // Display the user in the search results table
   displayUserInTable(user: any) {
     this.isTableVisible = true; // Set the flag to show the table
     this.displayedUser = user; // Store the displayed user data
     this.showListeUsers = false;
   }
 
+  // Close the search results table
   onCancel() {
     this.isTableVisible = false; // Hide the table when cancel button is clicked
     this.displayedUser = null; // Clear the displayed user data
@@ -109,38 +126,22 @@ export class TableListComponent implements OnInit {
   // Show the edit user form
   showEditForm(user: any) {
     console.log("Editing user:", user);
+    this.openModal(true);
     this.showEditFormRow = true;
     this.editUser = { ...user };
     this.editForm.patchValue(user); // Patch the form with the user data
   }
 
-  // Show the add user form
-  showAddForm() {
-    this.showAddUserForm = true; // Show the add user form
-  }
-
-  // Cancel adding a new user
-  cancelAddForm() {
-    this.showAddUserForm = false; // Hide the add user form
-    // Reset the form data if needed
-    this.formData = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      role: "",
-    };
-  }
-
-  // Cancel editing a user
-  cancelEdit() {
-    this.showEditFormRow = false;
-    this.editUser = {}; // Clear the editUser object when canceling the edit
-  }
-
   // Toggle password visibility
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  // Reset the form data
+  resetFormData() {
+    this.formData = {
+      annee: "",
+    };
   }
 
   // Submit the form
@@ -155,6 +156,7 @@ export class TableListComponent implements OnInit {
           this.showEditFormRow = false;
           this.editUser = {};
           this.fetchUsers(); // Fetch users again to update the table with the latest data
+          this.closeModal();
         },
         (error) => {
           console.error(
@@ -172,12 +174,13 @@ export class TableListComponent implements OnInit {
           this.fetchUsers();
           this.errorMessage = null; // Clear any previous error message on success
           this.inputFieldErrors = {};
-          this.cancelAddForm();
+          this.resetFormData();
+          this.closeModal();
         },
         (error) => {
           console.error("Error:", error);
           if (error.error.errors && Array.isArray(error.error.errors)) {
-            this.errorMessage = error.error.errors[0]; // Set the first error message from the array
+            this.errorMessage = error.error.errors; // Set the first error message from the array
             console.log("Error message:", this.errorMessage);
             this.inputFieldErrors = error.error.errors.reduce(
               (acc, errorMessage) => {
@@ -197,7 +200,25 @@ export class TableListComponent implements OnInit {
         }
       );
     }
+  }
 
-    // this.cancelAddForm();
+  // Open the modal
+  openModal(modal: Boolean) {
+    const modalRef = this.modalService.open(ModalComponent);
+    if (modal) {
+      modalRef.componentInstance.title = this.editFormTitle;
+      modalRef.componentInstance.content = this.editFormTemplate;
+      modalRef.componentInstance.saveButton = this.editFormSaveButton;
+    } else {
+      this.showEditFormRow = false;
+      modalRef.componentInstance.title = this.addFormTitle;
+      modalRef.componentInstance.content = this.addFormTemplate;
+      modalRef.componentInstance.saveButton = this.addFormSaveButton;
+    }
+  }
+
+  // Close the modal
+  closeModal() {
+    this.modalService.dismissAll();
   }
 }

@@ -1,5 +1,12 @@
+<!-- Modal Header -->
 <div class="modal-header">
-  <h4 class="modal-title">Modal Title</h4>
+  <!-- Modal Title -->
+  <h4 class="modal-title">
+    <ng-container *ngIf="title">
+      <ng-container *ngTemplateOutlet="title"></ng-container>
+    </ng-container>
+  </h4>
+  <!-- Button Close -->
   <button
     type="button"
     class="close"
@@ -9,10 +16,17 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
+
+<!-- Modal Body -->
 <div class="modal-body">
-	<ng-content></ng-content>
+  <ng-container *ngIf="content">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </ng-container>
 </div>
+
+<!-- Modal Footer -->
 <div class="modal-footer">
+  <!-- Button Close -->
   <button
     type="button"
     class="btn btn-secondary"
@@ -20,4 +34,8 @@
   >
     Close
   </button>
+  <!-- Button Save -->
+  <ng-container *ngIf="saveButton">
+    <ng-container *ngTemplateOutlet="saveButton"></ng-container>
+  </ng-container>
 </div>

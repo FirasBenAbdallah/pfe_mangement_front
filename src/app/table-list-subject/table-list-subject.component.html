@@ -16,10 +16,13 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
+          <!-- Card header -->
           <div class="card-header card-header-danger">
             <h4 class="card-title">List of subjects</h4>
           </div>
+          <!-- Card body -->
           <div class="card-body">
+            <!-- Table -->
             <div class="table-responsive">
               <table class="table">
                 <thead class="text-primary">
@@ -79,13 +82,18 @@
               </table>
             </div>
 
-            <button class="floating-button" (click)="showAddForm()">
+            <!-- Floating button -->
+            <button class="floating-button" (click)="openModal(false)">
               <i class="fas fa-user-plus"></i>
             </button>
 
             <!-- Edit Form -->
-            <div class="edit-form" *ngIf="showEditFormRow">
-              <form [formGroup]="editForm" (submit)="onSubmit(true)">
+            <ng-template #editFormTitle>
+              <span>Edit Subject</span>
+            </ng-template>
+
+            <ng-template #editFormTemplate>
+              <form [formGroup]="editForm" *ngIf="showEditFormRow">
                 <div class="form-row">
                   <div class="form-group">
                     <label>Name:</label>
@@ -107,114 +115,130 @@
                   </div>
                 </div>
                 <!-- Team selection dropdown -->
-                <!-- <div class="form-group">
+                <div class="form-group">
                   <label>School Year:</label>
-                  <select class="form-control" formControlName="schoolyear">
-                    <option value="" disabled>Select a school year</option>
-                    <option *ngFor="let schoolyear of schoolyears" [value]="schoolyear.id">
+                  <select class="form-select" formControlName="schoolyear_id">
+                    <option value="">No School Year</option>
+                    <option
+                      *ngFor="let schoolyear of schoolyears"
+                      [value]="schoolyear.id"
+                    >
                       {{ schoolyear.annee }}
                     </option>
                   </select>
-                </div> -->
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary">Save</button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    (click)="cancelEdit()"
-                  >
-                    Cancel
-                  </button>
+                </div>
+                <!-- User selection dropdown -->
+                <div class="form-group">
+                  <label>User:</label>
+                  <select class="form-select" formControlName="user_id">
+                    <option value="">No User</option>
+                    <option *ngFor="let user of users" [value]="user.id">
+                      {{ user.nom }} {{ user.prenom }}
+                    </option>
+                  </select>
                 </div>
               </form>
-            </div>
+            </ng-template>
+
+            <ng-template #editFormSaveButton>
+              <button
+                mat-raised-button
+                type="submit"
+                class="btn btn-primary"
+                (click)="onSubmit(true)"
+              >
+                Edit Subject
+              </button>
+            </ng-template>
 
             <!-- Add Form -->
-            <div *ngIf="showAddSubjectForm" class="col-md-8 mx-auto">
-              <div class="card">
-                <div class="card-body" style="background-color: #f9f9f9">
-                  <form (ngSubmit)="onSubmit(false)">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Name"
-                            type="text"
-                            [(ngModel)]="formData.libelle"
-                          />
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Skills"
-                            type="text"
-                            [(ngModel)]="formData.competences"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+            <ng-template #addFormTitle>
+              <span>Add Subject</span>
+            </ng-template>
 
-                    <div class="row">
-                      <div class="form-group">
-                        <label for="schoolyearId">School Year:</label>
-                        <select
-                          id="schoolyearId"
-                          name="schoolyearId"
-                          class="form-control"
-                          [(ngModel)]="formData.schoolyear_id"
-                        >
-                          <option value="">No School Year</option>
-                          <option
-                            *ngFor="let schoolyear of schoolyearOptions"
-                            [value]="schoolyear.id"
-                          >
-                            {{ schoolyear.annee }}
-                          </option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="userId">User:</label>
-                        <select
-                          id="userId"
-                          name="userId"
-                          class="form-control"
-                          [(ngModel)]="formData.user_id"
-                        >
-                          <option value="">No User</option>
-                          <option
-                            *ngFor="let user of userOptions"
-                            [value]="user.id"
-                          >
-                            {{ user.nom }} {{ user.prenom }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <button
-                      mat-raised-button
-                      type="submit"
-                      class="btn pull-right"
-                      style="background-color: #b127b0"
-                    >
-                      Add Subject
-                    </button>
-                    <button
-                      mat-raised-button
-                      type="button"
-                      class="btn pull-right"
-                      style="background-color: #6c757d; color: #fff"
-                      (click)="cancelAddForm()"
-                    >
-                      Cancel
-                    </button>
-                    <div class="clearfix"></div>
-                  </form>
+            <ng-template #addFormTemplate>
+              <form>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                      <input
+                        matInput
+                        placeholder="Name"
+                        type="text"
+                        [(ngModel)]="formData.libelle"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                      <input
+                        matInput
+                        placeholder="Skills"
+                        type="text"
+                        [(ngModel)]="formData.competences"
+                      />
+                    </mat-form-field>
+                  </div>
                 </div>
+
+                <div class="row">
+                  <div class="form-group">
+                    <label for="schoolyearId">School Year:</label>
+                    <select
+                      id="schoolyearId"
+                      name="schoolyearId"
+                      class="form-control"
+                      [(ngModel)]="formData.schoolyear_id"
+                    >
+                      <option value="">No School Year</option>
+                      <option
+                        *ngFor="let schoolyear of schoolyearOptions"
+                        [value]="schoolyear.id"
+                      >
+                        {{ schoolyear.annee }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="userId">User:</label>
+                    <select
+                      id="userId"
+                      name="userId"
+                      class="form-control"
+                      [(ngModel)]="formData.user_id"
+                    >
+                      <option value="">No User</option>
+                      <option
+                        *ngFor="let user of userOptions"
+                        [value]="user.id"
+                      >
+                        {{ user.nom }} {{ user.prenom }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="clearfix"></div>
+              </form>
+              <!-- Error message -->
+              <div *ngIf="errorMessage" class="text-danger">
+                <span *ngFor="let errorMessage of errorMessage">
+                  {{ errorMessage }}
+                  <br />
+                </span>
               </div>
-            </div>
+            </ng-template>
+
+            <ng-template #addFormSaveButton>
+              <button
+                mat-raised-button
+                type="submit"
+                class="btn btn-primary"
+                (click)="onSubmit(false)"
+              >
+                Add Subject
+              </button>
+            </ng-template>
           </div>
         </div>
       </div>

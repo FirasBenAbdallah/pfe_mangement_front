@@ -1,7 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { TeamsService } from "../services/teams.service";
+// Import Dependencies
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+// Import Components
+import { TeamsService } from "../services/teams.service";
+import { ModalComponent } from "../modal/modal.component";
+import { SubjectsService } from "app/services/subjects.service";
 
+// Component metadata
 @Component({
   selector: "app-table-list-team",
   templateUrl: "./table-list-team.component.html",
@@ -9,22 +15,47 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 })
 export class TableListTeamComponent implements OnInit {
   teams: any[] = [];
+  subjects: any[] = [];
+  subjectOptions: any[] = [];
   formData: any = {};
   showAddTeamForm: boolean = false; // New property to track if the add user form is visible
   showEditFormRow: boolean = false;
   editTeam: any = {};
   editForm: FormGroup;
+  errorMessage: string | null = null;
+  inputFieldErrors: { [key: string]: string } = {};
 
+  // New properties to hold the template references
+  @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
+  @ViewChild("addFormTitle") addFormTitle: TemplateRef<any>;
+  @ViewChild("addFormSaveButton") addFormSaveButton: TemplateRef<any>;
+  @ViewChild("editFormTemplate") editFormTemplate: TemplateRef<any>;
+  @ViewChild("editFormTitle") editFormTitle: TemplateRef<any>;
+  @ViewChild("editFormSaveButton") editFormSaveButton: TemplateRef<any>;
+
+  // Component constructor
   constructor(
     private teamService: TeamsService,
-    private formBuilder: FormBuilder
+    private subjectService: SubjectsService,
+    private formBuilder: FormBuilder,
+    private modalService: NgbModal
   ) {}
 
+  // Component initialization logic
   ngOnInit() {
     this.fetchTeams();
     this.initEditForm();
+    this.subjectService.fetchSubjects().subscribe(
+      (subjects) => {
+        this.subjects = subjects;
+      },
+      (error) => {
+        console.error("Error fetching subjects:", error);
+      }
+    );
   }
 
+  // Fetch teams
   fetchTeams() {
     this.teamService.fetchTeams().subscribe(
       (data) => {
@@ -36,6 +67,20 @@ export class TableListTeamComponent implements OnInit {
     );
   }
 
+  // Fetch subject options
+  fetchSubjectOptions() {
+    this.subjectService.fetchSubjects().subscribe(
+      (response) => {
+        this.subjectOptions = response;
+        console.log("Subject options:", this.subjectOptions);
+      },
+      (error) => {
+        console.error("Error fetching subject options:", error);
+      }
+    );
+  }
+
+  // Delete a team by ID
   deleteTeam(id: number) {
     this.teamService.deleteTeam(id).subscribe(
       (response) => {
@@ -48,47 +93,39 @@ export class TableListTeamComponent implements OnInit {
     );
   }
 
+  // Initialize the edit form
   initEditForm() {
     this.editForm = this.formBuilder.group({
       id: [""], // Add any other fields you have in the user object
       nom: ["", Validators.required],
       taille: ["", Validators.required],
+      subject_id: ["", Validators.required],
     });
   }
 
+  // Show Edit Form
   showEditForm(team: any) {
     console.log("Editing team:", team);
+    this.openModal(true);
     this.showEditFormRow = true;
     this.editTeam = { ...team };
-    this.editForm.patchValue(team); // Patch the form with the team data
+    this.editForm.patchValue({
+      id: team.id,
+      nom: team.nom,
+      taille: team.taille,
+      subject_id: team.subject_id,
+    }); // Patch the form with the team data
   }
 
-  /* cancelEdit() {
-    this.showEditFormRow = false;
-    this.editTeam = {}; // Clear the editUser object when canceling the edit
-  } */
-  cancelEdit() {
-    this.showEditFormRow = false;
-    this.editTeam = {};
-    this.editForm.reset(); // Reset the edit form
-  }
-
-  showAddForm() {
-    this.showAddTeamForm = true; // Show the add user form
-  }
-
-  cancelAddForm() {
-    this.showAddTeamForm = false; // Hide the add user form
-    // Reset the form data if needed
+  // Reset the form data
+  resetFormData() {
     this.formData = {
-      nom: "",
-      taille: "",
-      subject_id: "",
+      annee: "",
     };
   }
 
+  // Submit the form
   onSubmit(isEditing: Boolean) {
-    const formData = this.editForm.value;
     let teamData;
 
     if (isEditing) {
@@ -102,21 +139,18 @@ export class TableListTeamComponent implements OnInit {
         },
         (error) => {
           console.error(
-            "An error occurred while updating user with ID ${editedTeam.id}:",
+            "An error occurred while updating team with ID ${editedTeam.id}:",
             error
           );
         }
       );
     } else {
-      const numtelAsInt = parseInt(this.formData.numtel, 10);
-      const formDataWithIntNumtel = { ...this.formData, numtel: numtelAsInt };
-
       const subjectId = this.formData.subject_id
         ? this.formData.subject_id
         : null;
 
       teamData = {
-        ...formDataWithIntNumtel,
+        ...this.formData,
         subject_id: subjectId,
       };
 
@@ -124,13 +158,53 @@ export class TableListTeamComponent implements OnInit {
         (response) => {
           console.log("Success:", response);
           this.fetchTeams();
+          this.errorMessage = null; // Clear any previous error message on success
+          this.inputFieldErrors = {};
         },
         (error) => {
           console.error("Error:", error);
+          if (error.error.errors && Array.isArray(error.error.errors)) {
+            this.errorMessage = error.error.errors[0]; // Set the first error message from the array
+            console.log("Error message:", this.errorMessage);
+            this.inputFieldErrors = error.error.errors.reduce(
+              (acc, errorMessage) => {
+                if (errorMessage.propertyPath) {
+                  acc[errorMessage.propertyPath] = errorMessage.message;
+                  console.log(acc);
+                }
+                console.log(acc);
+                return acc;
+              },
+              {}
+            );
+          } else {
+            this.errorMessage = "An error occurred during form submission."; // Fallback error message
+            console.log("Error message:", this.errorMessage);
+          }
         }
       );
-
-      this.cancelAddForm();
     }
+    this.resetFormData();
+    this.closeModal();
+  }
+
+  // Open the modal
+  openModal(modal: Boolean) {
+    const modalRef = this.modalService.open(ModalComponent);
+    if (modal) {
+      modalRef.componentInstance.title = this.editFormTitle;
+      modalRef.componentInstance.content = this.editFormTemplate;
+      modalRef.componentInstance.saveButton = this.editFormSaveButton;
+    } else {
+      this.fetchSubjectOptions();
+      modalRef.componentInstance.title = this.addFormTitle;
+      modalRef.componentInstance.content = this.addFormTemplate;
+      modalRef.componentInstance.saveButton = this.addFormSaveButton;
+    }
+  }
+
+  // Close the modal
+  closeModal() {
+    this.modalService.dismissAll();
   }
 }

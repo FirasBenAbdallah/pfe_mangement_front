@@ -1,7 +1,14 @@
 <!-- Add the FontAwesome icon library -->
 <link
   rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+<!-- Bootstrap5 library -->
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+  crossorigin="anonymous"
 />
 
 <div class="main-content">
@@ -13,6 +20,7 @@
             <h4 class="card-title">List of school Years</h4>
           </div>
           <div class="card-body">
+            <!-- Table List -->
             <div class="table-responsive">
               <table class="table">
                 <thead class="text-primary">
@@ -49,80 +57,81 @@
                 </tbody>
               </table>
             </div>
+          </div>
 
-            <button class="floating-button" (click)="openModal()">+</button>
-            <!-- Edit Form -->
-            <div class="edit-form" *ngIf="showEditFormRow">
-              <form [formGroup]="editForm" (submit)="onSubmit(true)">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Year:</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      formControlName="annee"
-                      required
-                    />
-                  </div>
-                </div>
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-primary pull-right">
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    (click)="cancelEdit()"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
+          <!-- Floating button -->
+          <button class="floating-button" (click)="openModal(false)">
+            <i class="fas fa-user-plus"></i>
+          </button>
 
-            <!-- Add Form -->
-            <div *ngIf="showAddSchoolYearForm" class="col-md-8 mx-auto">
-              <div class="card">
-                <div class="card-body" style="background-color: #f9f9f9">
-                  <form (ngSubmit)="onSubmit(false)">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <mat-form-field class="example-full-width">
-                          <input
-                            matInput
-                            placeholder="Year"
-                            type="number"
-                            [(ngModel)]="formData.annee"
-                            min="2020"
-                            max="2100"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+          <!-- Edit Form -->
+          <ng-template #editFormTitle>
+            <span>Edit School Year</span>
+          </ng-template>
 
-                    <button
-                      mat-raised-button
-                      type="submit"
-                      class="btn pull-right"
-                      style="background-color: #007bff"
-                    >
-                      Add School Year
-                    </button>
-                    <button
-                      mat-raised-button
-                      type="button"
-                      class="btn pull-right"
-                      style="background-color: #6c757d; color: #fff"
-                      (click)="cancelAddForm()"
-                    >
-                      Cancel
-                    </button>
-                    <div class="clearfix"></div>
-                  </form>
+          <ng-template #editFormTemplate>
+            <form [formGroup]="editForm" *ngIf="showEditFormRow">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Year:</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="annee"
+                    required
+                  />
                 </div>
               </div>
-            </div>
-          </div>
+            </form>
+          </ng-template>
+
+          <ng-template #editFormSaveButton>
+            <button
+              mat-raised-button
+              type="submit"
+              class="btn"
+              style="background-color: #0d6efd"
+              (click)="onSubmit(true)"
+            >
+              Edit School Year
+            </button>
+          </ng-template>
+
+          <!-- Add Form -->
+          <ng-template #addFormTitle>
+            <span>Add School Year</span>
+          </ng-template>
+
+          <ng-template #addFormTemplate>
+            <form>
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <input
+                      matInput
+                      placeholder="Year"
+                      type="number"
+                      [(ngModel)]="formData.annee"
+                      min="2020"
+                      max="2100"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+
+          <ng-template #addFormSaveButton>
+            <button
+              mat-raised-button
+              type="submit"
+              class="btn"
+              style="background-color: #0d6efd"
+              (click)="onSubmit(false)"
+            >
+              Add School Year
+            </button>
+          </ng-template>
         </div>
       </div>
     </div>

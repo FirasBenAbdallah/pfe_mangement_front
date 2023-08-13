@@ -23,6 +23,7 @@ export class TeamsService {
     const team = {
       nom: formData.nom,
       taille: formData.taille,
+      subject_id: formData.subject_id,
     };
 
     return this.http.post(`${this.apiUrl}/${this.apiUrlTeam}`, team);

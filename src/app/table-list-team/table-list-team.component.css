@@ -55,6 +55,7 @@ label {
   cursor: pointer;
 }
 
+/* Add the FontAwesome icon for the icon  and set its size to 21px by 21px */
 .floating-button i {
   font-size: 21px;
   width: 21px;
@@ -70,12 +71,13 @@ label {
   bottom: 20px;
   right: 20px;
   background-color: red;
+  height: 41px;
   color: #fff;
   border: none;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  border-radius: 0; /* Set border-radius to 0 to make the button non-round */
+  border-radius: 5px; /* Set border-radius to 0 to make the button non-round */
 }
 
 /* MODAL */

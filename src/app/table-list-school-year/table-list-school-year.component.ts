@@ -1,33 +1,47 @@
-import { Component, OnInit } from "@angular/core";
-import { SchoolyearsService } from "../services/schoolyears.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ModalComponent } from "../modal/modal.component";
+// Import dependencies
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+// Import Components
+import { ModalComponent } from "../modal/modal.component";
+import { SchoolyearsService } from "../services/schoolyears.service";
 
+// Component metadata
 @Component({
   selector: "app-table-list-school-year",
   templateUrl: "./table-list-school-year.component.html",
   styleUrls: ["./table-list-school-year.component.css"],
 })
+// Component class
 export class TableListSchoolYearComponent implements OnInit {
   schoolyears: any[] = [];
   formData: any = {};
-  showAddSchoolYearForm: boolean = false; // New property to track if the add user form is visible
   showEditFormRow: boolean = false;
   editSchoolYear: any = {};
   editForm: FormGroup;
 
+  // New properties to hold the template references
+  @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
+  @ViewChild("addFormTitle") addFormTitle: TemplateRef<any>;
+  @ViewChild("addFormSaveButton") addFormSaveButton: TemplateRef<any>;
+  @ViewChild("editFormTemplate") editFormTemplate: TemplateRef<any>;
+  @ViewChild("editFormTitle") editFormTitle: TemplateRef<any>;
+  @ViewChild("editFormSaveButton") editFormSaveButton: TemplateRef<any>;
+
+  // Component constructor
   constructor(
     private schoolyearService: SchoolyearsService,
     private formBuilder: FormBuilder,
     private modalService: NgbModal
   ) {}
 
+  // Component initialization logic
   ngOnInit() {
     this.fetchSchoolYears();
     this.initEditForm();
   }
 
+  // Fetch all users
   fetchSchoolYears() {
     this.schoolyearService.fetchSchoolYears().subscribe(
       (data) => {
@@ -39,6 +53,7 @@ export class TableListSchoolYearComponent implements OnInit {
     );
   }
 
+  // Delete user by ID
   deleteSchoolYear(id: number) {
     this.schoolyearService.deleteSchoolYear(id).subscribe(
       (response) => {
@@ -53,6 +68,7 @@ export class TableListSchoolYearComponent implements OnInit {
     );
   }
 
+  // Initialize the edit form
   initEditForm() {
     this.editForm = this.formBuilder.group({
       id: [""], // Add any other fields you have in the user object
@@ -60,30 +76,23 @@ export class TableListSchoolYearComponent implements OnInit {
     });
   }
 
+  // Show the edit form
   showEditForm(schoolyear: any) {
     console.log("Editing School Year:", schoolyear);
+    this.openModal(true);
     this.showEditFormRow = true;
     this.editSchoolYear = { ...schoolyear };
     this.editForm.patchValue(schoolyear); // Patch the form with the user data
   }
 
-  cancelEdit() {
-    this.showEditFormRow = false;
-    this.editSchoolYear = {}; // Clear the editUser object when canceling the edit
-  }
-
-  showAddForm() {
-    this.showAddSchoolYearForm = true; // Show the add user form
-  }
-
-  cancelAddForm() {
-    this.showAddSchoolYearForm = false; // Hide the add user form
-    // Reset the form data if needed
+  // Reset the form data
+  resetFormData() {
     this.formData = {
       annee: "",
     };
   }
 
+  // On form submit
   onSubmit(isEditing: boolean) {
     const formData = this.editForm.value;
 
@@ -118,10 +127,27 @@ export class TableListSchoolYearComponent implements OnInit {
       );
     }
 
-    this.cancelAddForm();
+    this.resetFormData();
+    this.closeModal();
   }
 
-  openModal() {
-    const modalRef = this.modalService.open(ModalComponent, { centered: true });
+  // Open the modal
+  openModal(modal: Boolean) {
+    const modalRef = this.modalService.open(ModalComponent);
+    if (modal) {
+      modalRef.componentInstance.title = this.editFormTitle;
+      modalRef.componentInstance.content = this.editFormTemplate;
+      modalRef.componentInstance.saveButton = this.editFormSaveButton;
+    } else {
+      this.showEditFormRow = false;
+      modalRef.componentInstance.title = this.addFormTitle;
+      modalRef.componentInstance.content = this.addFormTemplate;
+      modalRef.componentInstance.saveButton = this.addFormSaveButton;
+    }
+  }
+
+  // Close the modal
+  closeModal() {
+    this.modalService.dismissAll();
   }
 }
