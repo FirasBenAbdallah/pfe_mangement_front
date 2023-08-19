@@ -24,6 +24,7 @@ export class TableListComponent implements OnInit {
   showListeUsers: boolean = true; // New property to track if the liste users form is visible
   isTableVisible = false; // To control the visibility of the table
   displayedUser: any; // To store the displayed user data
+  loading: boolean = true;
 
   // New properties to hold the template references
   @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
@@ -51,18 +52,21 @@ export class TableListComponent implements OnInit {
     this.userService.fetchUsers().subscribe(
       (data) => {
         this.users = data; // Update the users array with the fetched data
+        this.loading = false;
       },
       (error) => {
         console.error("An error occurred while fetching the data:", error);
+        this.loading = false;
       }
     );
   }
+
+
 
   // Delete user by ID
   deleteUser(id: number) {
     this.userService.deleteUser(id).subscribe(
       () => {
-        console.log(`User with ID ${id} deleted successfully.`);
         // Optionally, you can remove the deleted item from the local array
         this.users = this.users.filter((user) => user.id !== id);
       },
@@ -79,13 +83,11 @@ export class TableListComponent implements OnInit {
     const nom = searchParts.slice(1).join(" ");
 
     if (!prenom || !nom) {
-      console.log("Invalid input provided. Please enter both prenom and nom.");
       return;
     }
 
     this.userService.fetchUserByPrenomAndNom(prenom, nom).subscribe(
       (data) => {
-        console.log(`User with prenom ${prenom} and nom ${nom}:`, data);
         this.displayUserInTable(data); // Call the function to display the user in the table
       },
       (error) => {
@@ -125,7 +127,6 @@ export class TableListComponent implements OnInit {
 
   // Show the edit user form
   showEditForm(user: any) {
-    console.log("Editing user:", user);
     this.openModal(true);
     this.showEditFormRow = true;
     this.editUser = { ...user };
@@ -152,7 +153,6 @@ export class TableListComponent implements OnInit {
       // If the form data has an 'id', it means we are updating an existing user.
       this.userService.updateUser(formData).subscribe(
         () => {
-          console.log(`User with ID ${formData.id} updated successfully.`);
           this.showEditFormRow = false;
           this.editUser = {};
           this.fetchUsers(); // Fetch users again to update the table with the latest data
@@ -170,7 +170,6 @@ export class TableListComponent implements OnInit {
       // If the form data does not have an 'id', it means we are adding a new user.
       this.userService.addUser(this.formData).subscribe(
         (response) => {
-          console.log("Success:", response);
           this.fetchUsers();
           this.errorMessage = null; // Clear any previous error message on success
           this.inputFieldErrors = {};
@@ -181,21 +180,20 @@ export class TableListComponent implements OnInit {
           console.error("Error:", error);
           if (error.error.errors && Array.isArray(error.error.errors)) {
             this.errorMessage = error.error.errors; // Set the first error message from the array
-            console.log("Error message:", this.errorMessage);
+            for (let i = 0; i < this.errorMessage.length; i++) {
+              alert(this.errorMessage[i]);
+            }
             this.inputFieldErrors = error.error.errors.reduce(
               (acc, errorMessage) => {
                 if (errorMessage.propertyPath) {
                   acc[errorMessage.propertyPath] = errorMessage.message;
-                  console.log(acc);
                 }
-                console.log(acc);
                 return acc;
               },
               {}
             );
           } else {
             this.errorMessage = "An error occurred during form submission."; // Fallback error message
-            console.log("Error message:", this.errorMessage);
           }
         }
       );

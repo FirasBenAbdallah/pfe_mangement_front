@@ -14,12 +14,8 @@ export class CreateaccountComponent implements OnInit {
   constructor(private userService: UsersService) {}
 
   onSubmit() {
-    console.log(this.formData);
-
     this.userService.addUser(this.formData).subscribe(
-      (response) => {
-        console.log("Success:", response);
-      },
+      (response) => {},
       (error) => {
         console.error("Error:", error);
       }

@@ -4,7 +4,7 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Add user</h4>
+            <h4 class="card-title">User Profile</h4>
             <!-- <p class="card-category">Complete your profile</p> -->
           </div>
           <div class="card-body">
@@ -16,8 +16,10 @@
                       matInput
                       placeholder="Fist Name"
                       type="text"
+                      disabled
                       [(ngModel)]="formData.firstName"
                     />
+                    {{ userDetails.prenom }}
                   </mat-form-field>
                 </div>
                 <div class="col-md-4">
@@ -26,8 +28,10 @@
                       matInput
                       placeholder="Last Name"
                       type="text"
+                      disabled
                       [(ngModel)]="formData.lastName"
                     />
+                    {{ userDetails.nom }}
                   </mat-form-field>
                 </div>
               </div>
@@ -38,18 +42,10 @@
                       matInput
                       placeholder="Email address"
                       type="email"
+                      disabled
                       [(ngModel)]="formData.email"
                     />
-                  </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      placeholder="Password"
-                      type="password"
-                      [(ngModel)]="formData.password"
-                    />
+                    {{ userDetails.email }}
                   </mat-form-field>
                 </div>
               </div>
@@ -60,8 +56,10 @@
                       matInput
                       placeholder="Role"
                       type="text"
-                      [(ngModel)]="formData.role"
+                      disabled
+                      [(ngModel)]="formData.roles"
                     />
+                    {{ userDetails.roles }}
                   </mat-form-field>
                 </div>
               </div>
@@ -70,7 +68,7 @@
                 type="submit"
                 class="btn btn-danger pull-right"
               >
-                Add User
+                Save
               </button>
               <div class="clearfix"></div>
             </form>
@@ -85,15 +83,13 @@
             </a>
           </div>
           <div class="card-body">
-            <h6 class="card-category text-gray">CEO / Co-Founder</h6>
-            <h4 class="card-title">Alec Thompson</h4>
+            <h6 class="card-category text-gray">{{ userDetails.roles }}</h6>
+            <h4 class="card-title">{{ userDetails.prenom}} {{ userDetails.nom }}</h4>
             <p class="card-description">
-              Don't be scared of the truth because we need to restart the human
-              foundation in truth And I love you like Kanye loves Kanye I love
-              Rick Owens’ bed design but the back is...
+              {{ userDetails.email }}
             </p>
             <a href="javascript:void(0)" class="btn btn-danger btn-round"
-              >Follow</a
+              >Edit</a
             >
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { environment } from "../../environments/environment";
 import { map } from "rxjs/operators";
@@ -11,12 +12,11 @@ import { map } from "rxjs/operators";
 export class TeamsService {
   teams: any[] = [];
   private apiUrlTeam = "teams";
-  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   fetchTeams() {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlTeam}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.apiUrlTeam}`);
   }
 
   addTeam(formData: any): Observable<any> {
@@ -26,13 +26,47 @@ export class TeamsService {
       subject_id: formData.subject_id,
     };
 
-    return this.http.post(`${this.apiUrl}/${this.apiUrlTeam}`, team);
+    return this.http
+      .post(`${environment.apiUrl}/${this.apiUrlTeam}`, team)
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "Team added successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error adding team:", error);
+          throw error;
+        })
+      );
   }
 
   updateTeam(team: any): Observable<any> {
     const teamId = team.id;
 
-    return this.http.patch(`${this.apiUrl}/${this.apiUrlTeam}/${teamId}`, team);
+    return this.http
+      .patch(`${environment.apiUrl}/${this.apiUrlTeam}/${teamId}`, team)
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "Team updated successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error updating team:", error);
+          throw error;
+        })
+      );
   }
 
   deleteTeam(id: number): Observable<any> {
@@ -48,7 +82,7 @@ export class TeamsService {
         if (result.isConfirmed) {
           // Use the map operator to return the result of the HTTP delete request
           this.http
-            .delete(`${this.apiUrl}/${this.apiUrlTeam}/${id}`)
+            .delete(`${environment.apiUrl}/${this.apiUrlTeam}/${id}`)
             .pipe(
               map((response) => {
                 // Resolve the observer with the response data
@@ -67,7 +101,7 @@ export class TeamsService {
 
   fetchTeamByName(nom: string): Observable<any> {
     return this.http.get<any>(
-      `${this.apiUrl}/${this.apiUrlTeam}/${nom}`
+      `${environment.apiUrl}/${this.apiUrlTeam}/${nom}`
     );
   }
 }

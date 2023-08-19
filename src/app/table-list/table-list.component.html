@@ -1,16 +1,3 @@
-<!-- Add the FontAwesome icon library -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<!-- Bootstrap5 library -->
-<link
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-  rel="stylesheet"
-  integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-  crossorigin="anonymous"
-/>
-
 <div class="main-content">
   <div class="container-fluid" *ngIf="showListeUsers">
     <div class="row">
@@ -50,47 +37,54 @@
           <!-- Card Body -->
           <div class="card-body">
             <!-- Table Body -->
-            <div class="table-responsive">
-              <table class="table">
-                <thead class="text-primary">
-                  <th>Last name</th>
-                  <th>First name</th>
-                  <th>Email</th>
-                  <th>Password</th>
-                  <th>Role</th>
-                  <th>Action</th>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let user of users">
-                    <td>{{ user.nom }}</td>
-                    <td>{{ user.prenom }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.password }}</td>
-                    <td>{{ user.role }}</td>
-                    <td>
-                      <i
-                        class="fa fa-trash delete-icon"
-                        style="
-                          font-size: 24px;
-                          color: red;
-                          cursor: pointer;
-                          margin-right: 10px;
-                        "
-                        (click)="deleteUser(user.id)"
-                      >
-                      </i>
-                      <i
-                        class="fa fa-edit edit-icon"
-                        style="font-size: 24px; color: red; cursor: pointer"
-                        (click)="showEditForm(user)"
-                      ></i>
-                    </td>
-                  </tr>
-                  <tr *ngIf="users.length === 0">
-                    <td colspan="6">no records found</td>
-                  </tr>
-                </tbody>
-              </table>
+            <!-- Display loading indicator -->
+            <div *ngIf="loading" class="text-center mt-3 text-danger-emphasis">
+              <i class="fas fa-spinner fa-spin fa-3x"></i>
+              <p>Loading...</p>
+            </div>
+            <!-- Display table -->
+            <div *ngIf="!loading">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class="text-primary">
+                    <th>Last name</th>
+                    <th>First name</th>
+                    <th>Email</th>
+                   <!-- <th>Password</th>-->
+                    <th>Role</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of users">
+                      <td>{{ user.nom }}</td>
+                      <td>{{ user.prenom }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.roles }}</td>
+                      <td>
+                        <i
+                          class="fa fa-trash delete-icon"
+                          style="
+                            font-size: 24px;
+                            color: red;
+                            cursor: pointer;
+                            margin-right: 10px;
+                          "
+                          (click)="deleteUser(user.id)"
+                        >
+                        </i>
+                        <i
+                          class="fa fa-edit edit-icon"
+                          style="font-size: 24px; color: red; cursor: pointer"
+                          (click)="showEditForm(user)"
+                        ></i>
+                      </td>
+                    </tr>
+                    <tr *ngIf="users.length === 0">
+                      <td colspan="6">no records found</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
           <!-- Add Floating Button -->
@@ -135,7 +129,7 @@
                     required
                   />
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                   <label>Password:</label>
                   <span
                     class="password-icon"
@@ -153,16 +147,15 @@
                     [type]="showPassword ? 'text' : 'password'"
                     required
                   />
-                </div>
+                </div>-->
               </div>
               <div class="form-group">
                 <label>Role:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="role"
-                  required
-                />
+                <select class="form-select" formControlName="role">
+                  <option value="Admin">Admin</option>
+                  <option value="Encadrant">Encadrant</option>
+                  <option value="Evaluateur">Evaluateur</option>
+                </select>
               </div>
             </form>
           </ng-template>
@@ -195,9 +188,6 @@
                       type="text"
                       [(ngModel)]="formData.firstName"
                     />
-                    <div class="text-danger">
-                      {{ inputFieldErrors["firstName"] }}
-                    </div>
                   </mat-form-field>
                 </div>
                 <div class="col-md-4">
@@ -209,9 +199,6 @@
                       [(ngModel)]="formData.lastName"
                     />
                   </mat-form-field>
-                  <div class="text-danger">
-                    {{ inputFieldErrors["lastName"] }}
-                  </div>
                 </div>
               </div>
               <div class="row">
@@ -224,9 +211,6 @@
                       [(ngModel)]="formData.email"
                     />
                   </mat-form-field>
-                  <div class="text-danger">
-                    {{ inputFieldErrors["email"] }}
-                  </div>
                 </div>
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">
@@ -237,24 +221,16 @@
                       [(ngModel)]="formData.password"
                     />
                   </mat-form-field>
-                  <div class="text-danger">
-                    {{ inputFieldErrors["password"] }}
-                  </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <mat-form-field class="example-full-width">
-                    <input
-                      matInput
-                      placeholder="Role"
-                      type="text"
-                      [(ngModel)]="formData.role"
-                    />
-                  </mat-form-field>
-                  <div class="text-danger">
-                    {{ inputFieldErrors["role"] }}
-                  </div>
+                  <label>Role:</label>
+                  <select class="form-select" [(ngModel)]="formData.role">
+                    <option value="Admin" selected>Admin</option>
+                    <option value="Encadrant">Encadrant</option>
+                    <option value="Evaluateur">Evaluateur</option>
+                  </select>
                 </div>
               </div>
             </form>
@@ -299,10 +275,6 @@
           <tr>
             <th>Email</th>
             <td>{{ displayedUser.email }}</td>
-          </tr>
-          <tr>
-            <th>Password</th>
-            <td>{{ displayedUser.password }}</td>
           </tr>
           <tr>
             <th>Role</th>

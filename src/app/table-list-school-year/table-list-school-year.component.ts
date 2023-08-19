@@ -19,6 +19,7 @@ export class TableListSchoolYearComponent implements OnInit {
   showEditFormRow: boolean = false;
   editSchoolYear: any = {};
   editForm: FormGroup;
+  loading: boolean = true;
 
   // New properties to hold the template references
   @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
@@ -46,9 +47,11 @@ export class TableListSchoolYearComponent implements OnInit {
     this.schoolyearService.fetchSchoolYears().subscribe(
       (data) => {
         this.schoolyears = data; // Update the users array with the fetched data
+        this.loading = false;
       },
       (error) => {
         console.error("An error occurred while fetching the data:", error);
+        this.loading = false;
       }
     );
   }
@@ -57,7 +60,6 @@ export class TableListSchoolYearComponent implements OnInit {
   deleteSchoolYear(id: number) {
     this.schoolyearService.deleteSchoolYear(id).subscribe(
       (response) => {
-        console.log("Deletion successful:", response);
         this.schoolyears = this.schoolyears.filter(
           (schoolyear) => schoolyear.id !== id
         );
@@ -78,7 +80,6 @@ export class TableListSchoolYearComponent implements OnInit {
 
   // Show the edit form
   showEditForm(schoolyear: any) {
-    console.log("Editing School Year:", schoolyear);
     this.openModal(true);
     this.showEditFormRow = true;
     this.editSchoolYear = { ...schoolyear };
@@ -100,9 +101,6 @@ export class TableListSchoolYearComponent implements OnInit {
       // If the form data has an 'id', it means we are updating an existing team.
       this.schoolyearService.updateSchoolYear(formData).subscribe(
         () => {
-          console.log(
-            `School Year with ID ${formData.id} updated successfully.`
-          );
           this.showEditFormRow = false;
           this.editSchoolYear = {};
           this.fetchSchoolYears(); // Fetch teams again to update the table with the latest data
@@ -118,7 +116,6 @@ export class TableListSchoolYearComponent implements OnInit {
       // If the form data does not have an 'id', it means we are adding a new user.
       this.schoolyearService.addSchoolYear(this.formData).subscribe(
         (response) => {
-          console.log("Success:", response);
           this.fetchSchoolYears();
         },
         (error) => {

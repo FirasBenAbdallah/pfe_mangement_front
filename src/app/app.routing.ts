@@ -4,8 +4,6 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 import { CreateaccountComponent } from './createaccount/createaccount.component';
 import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
 const routes: Routes =[
@@ -23,9 +21,8 @@ const routes: Routes =[
   },
   { path: 'createaccount', component: CreateaccountComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent }, // Define the route for the dashboard
   { path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route to login
-  // { path: '**', redirectTo: '/login' },
+  
 ];
 
 @NgModule({

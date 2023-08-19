@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { tap, catchError } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { environment } from "../../environments/environment";
 import { map } from "rxjs/operators";
@@ -11,12 +12,13 @@ import { map } from "rxjs/operators";
 export class CandidatesService {
   candidates: any[] = [];
   private apiUrlCandidate = "candidates";
-  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   fetchCandidates() {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlCandidate}`);
+    return this.http.get<any[]>(
+      `${environment.apiUrl}/${this.apiUrlCandidate}`
+    );
   }
 
   addCandidate(formData: any): Observable<any> {
@@ -30,16 +32,50 @@ export class CandidatesService {
       team_id: formData.team_id,
     };
 
-    return this.http.post(`${this.apiUrl}/${this.apiUrlCandidate}`, candidate);
+    return this.http
+      .post(`${environment.apiUrl}/${this.apiUrlCandidate}`, candidate)
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "Candidate added successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error adding candidate:", error);
+          throw error;
+        })
+      );
   }
 
   updateCandidate(candidate: any): Observable<any> {
     const candidateId = candidate.id;
 
-    return this.http.patch(
-      `${this.apiUrl}/${this.apiUrlCandidate}/${candidateId}`,
-      candidate
-    );
+    return this.http
+      .patch(
+        `${environment.apiUrl}/${this.apiUrlCandidate}/${candidateId}`,
+        candidate
+      )
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "Candidate updated successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error updating candidate:", error);
+          throw error;
+        })
+      );
   }
 
   deleteCandidate(id: number): Observable<any> {
@@ -55,7 +91,7 @@ export class CandidatesService {
         if (result.isConfirmed) {
           // Use the map operator to return the result of the HTTP delete request
           this.http
-            .delete(`${this.apiUrl}/${this.apiUrlCandidate}/${id}`)
+            .delete(`${environment.apiUrl}/${this.apiUrlCandidate}/${id}`)
             .pipe(
               map((response) => {
                 // Resolve the observer with the response data

@@ -32,12 +32,9 @@ export class LoginComponent implements OnInit {
       .login(this.email, this.password, this.rememberMe)
       .subscribe(
         (response) => {
-          // Handle successful login here, e.g., redirect to another page
-          console.log("Login successful", response);
           this.router.navigate(["/dashboard"]);
         },
         (error) => {
-          // Handle login error here, e.g., display error message
           this.errorMessage = "Invalid email or password.";
           console.error("Login error", error);
         }

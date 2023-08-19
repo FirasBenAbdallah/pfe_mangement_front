@@ -15,6 +15,7 @@ import { SchoolyearsService } from "../services/schoolyears.service";
   styleUrls: ["./table-list-subject.component.css"],
 })
 export class TableListSubjectComponent implements OnInit {
+  encadrantUsers: any[] = [];
   subjects: any[] = [];
   formData: any = {};
   schoolyearOptions: any[] = [];
@@ -26,6 +27,7 @@ export class TableListSubjectComponent implements OnInit {
   editForm: FormGroup;
   schoolyears: any[] = [];
   users: any[] = [];
+  loading: boolean = true;
 
   // New properties to hold the template references
   @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
@@ -55,9 +57,11 @@ export class TableListSubjectComponent implements OnInit {
     this.subjectService.fetchSubjects().subscribe(
       (data) => {
         this.subjects = data; // Update the users array with the fetched data
+        this.loading = false;
       },
       (error) => {
         console.error("An error occurred while fetching the data:", error);
+        this.loading = false;
       }
     );
   }
@@ -72,7 +76,7 @@ export class TableListSubjectComponent implements OnInit {
         console.error("Error fetching school years:", error);
       }
     );
-    this.userService.fetchUsers().subscribe(
+    this.userService.fetchEncadrantUsers().subscribe(
       (users) => {
         this.users = users;
       },
@@ -87,16 +91,14 @@ export class TableListSubjectComponent implements OnInit {
     this.schoolyearService.fetchSchoolYears().subscribe(
       (response) => {
         this.schoolyearOptions = response;
-        console.log("Schoolyear options:", this.schoolyearOptions);
       },
       (error) => {
         console.error("Error fetching schoolyear options:", error);
       }
     );
-    this.userService.fetchUsers().subscribe(
+    this.userService.fetchEncadrantUsers().subscribe(
       (response) => {
         this.userOptions = response;
-        console.log("User options:", this.userOptions);
       },
       (error) => {
         console.error("Error fetching user options:", error);
@@ -108,7 +110,6 @@ export class TableListSubjectComponent implements OnInit {
   deleteSubject(id: number) {
     this.subjectService.deleteSubject(id).subscribe(
       () => {
-        console.log(`Subject with ID ${id} deleted successfully.`);
         this.subjects = this.subjects.filter((subject) => subject.id !== id);
       },
       (error) => {
@@ -131,7 +132,6 @@ export class TableListSubjectComponent implements OnInit {
 
   // Show Edit Form
   showEditForm(subject: any) {
-    console.log("Editing subject:", subject);
     this.openModal(true);
     this.showEditFormRow = true;
     this.editSubject = { ...subject };
@@ -157,9 +157,6 @@ export class TableListSubjectComponent implements OnInit {
       const editedSubject = this.editForm.value;
       this.subjectService.updateSubject(editedSubject).subscribe(
         () => {
-          console.log(
-            `Subject with ID ${editedSubject.id} updated successfully.`
-          );
           this.showEditFormRow = false;
           this.editSubject = {};
           this.fetchSubjects();
@@ -192,7 +189,6 @@ export class TableListSubjectComponent implements OnInit {
 
       this.subjectService.addSubject(subjectData).subscribe(
         (response) => {
-          console.log("Success:", response);
           this.fetchSubjects();
           this.errorMessage = null; // Clear any previous error message on success
           this.inputFieldErrors = {};
@@ -203,7 +199,6 @@ export class TableListSubjectComponent implements OnInit {
           console.error("Error:", error);
           if (error.error.errors && Array.isArray(error.error.errors)) {
             this.errorMessage = error.error.errors; // Set the first error message from the array
-            console.log("Error message:", this.errorMessage);
             this.inputFieldErrors = error.error.errors.reduce(
               (acc, errorMessage) => {
                 if (errorMessage.propertyPath) {
@@ -215,7 +210,6 @@ export class TableListSubjectComponent implements OnInit {
             );
           } else {
             this.errorMessage = "An error occurred during form submission."; // Fallback error message
-            console.log("Error message:", this.errorMessage);
           }
         }
       );

@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { environment } from "../../environments/environment";
 import { map } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SubjectsService {
   subjects: any[] = [];
   private apiUrlSubject = "subjects";
-  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   fetchSubjects() {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlSubject}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/${this.apiUrlSubject}`);
   }
 
   addSubject(formData: any): Observable<any> {
@@ -27,16 +27,50 @@ export class SubjectsService {
       user_id: formData.user_id,
     };
 
-    return this.http.post(`${this.apiUrl}/${this.apiUrlSubject}`, subject );
+    return this.http
+      .post(`${environment.apiUrl}/${this.apiUrlSubject}`, subject)
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "Subject added successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error adding subject:", error);
+          throw error;
+        })
+      );
   }
 
   updateSubject(subject: any): Observable<any> {
     const subjectId = subject.id;
 
-    return this.http.patch(
-      `${this.apiUrl}/${this.apiUrlSubject}/${subjectId}`,
-      subject
-    );
+    return this.http
+      .patch(
+        `${environment.apiUrl}/${this.apiUrlSubject}/${subjectId}`,
+        subject
+      )
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "Subject updated successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error updating subject:", error);
+          throw error;
+        })
+      );
   }
 
   deleteSubject(id: number): Observable<any> {
@@ -52,7 +86,7 @@ export class SubjectsService {
         if (result.isConfirmed) {
           // Use the map operator to return the result of the HTTP delete request
           this.http
-            .delete(`${this.apiUrl}/${this.apiUrlSubject}/${id}`)
+            .delete(`${environment.apiUrl}/${this.apiUrlSubject}/${id}`)
             .pipe(
               map((response) => {
                 // Resolve the observer with the response data

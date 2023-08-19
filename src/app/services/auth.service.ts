@@ -6,6 +6,7 @@ import { Location } from "@angular/common";
 import { tap } from "rxjs/operators";
 import { catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
+import Swal from "sweetalert2";
 
 @Injectable({
   providedIn: "root",
@@ -34,9 +35,17 @@ export class AuthService {
         if (rememberMe) {
           localStorage.setItem(this.STORAGE_KEY, "true");
         }
+        // Store user details in local storage or a service
+        localStorage.setItem("userDetails", JSON.stringify(response.message));
         // Handle successful login here, e.g., redirect to another page
-        console.log("Login successful", response);
         this.router.navigate(["/dashboard"]);
+        // Display success message
+        Swal.fire({
+          icon: "success",
+          title: "Login successful",
+          showConfirmButton: false,
+          timer: 3000, // Display for 3 seconds
+        });
       }),
       catchError((error) => {
         // Handle login error here, e.g., display error message
@@ -53,6 +62,13 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.STORAGE_KEY);
     this.router.navigateByUrl("/login");
+    // Display success message
+    Swal.fire({
+      icon: "error",
+      title: "Logged out successfully",
+      showConfirmButton: false,
+      timer: 3000, // Display for 3 seconds
+    });
   }
 
   preventBackNavigation(): void {
@@ -60,35 +76,4 @@ export class AuthService {
       this.location.forward();
     });
   }
-
-  /* login(email: string, password: string, rememberMe: boolean) {
-    const formData = { email, password };
-    return this.http.post<any>(this.apiUrl, formData).pipe(
-      tap((response) => {
-        if (rememberMe) {
-          // Store the login credentials in localStorage
-          localStorage.setItem("rememberedEmail", email);
-          localStorage.setItem("rememberedPassword", password);
-        } else {
-          // Clear any previously stored login credentials
-          localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedPassword");
-        }
-      })
-    );
-  }
-
-  isLoggedIn(): boolean {
-    return true; // Replace this with your actual logic
-  }
-
-  logout(): void {
-    this.router.navigateByUrl("/login");
-  }
-
-  preventBackNavigation(): void {
-    this.location.subscribe(() => {
-      this.location.forward();
-    });
-  } */
 }

@@ -1,16 +1,3 @@
-<!-- Add the FontAwesome icon library -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<!-- Bootstrap5 library -->
-<link
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-  rel="stylesheet"
-  integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-  crossorigin="anonymous"
-/>
-
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
@@ -21,41 +8,53 @@
           </div>
           <div class="card-body">
             <!-- Table List -->
-            <div class="table-responsive">
-              <table class="table">
-                <thead class="text-primary">
-                  <th>Year</th>
-                  <th>Action</th>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let schoolyear of schoolyears">
-                    <td>{{ schoolyear.annee }}</td>
+            <!-- Display loading indicator -->
+            <div *ngIf="loading" class="text-center mt-3">
+              <div
+                class="spinner-border text-danger-emphasis"
+                style="width: 2rem; height: 2rem"
+                role="status"
+              ></div>
+              <br />
+              <strong class="text-danger-emphasis">Loading...</strong>
+            </div>
+            <div *ngIf="!loading">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class="text-primary">
+                    <th>Year</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let schoolyear of schoolyears">
+                      <td>{{ schoolyear.annee }}</td>
 
-                    <td>
-                      <!-- Icônes d'action pour la première ligne -->
-                      <i
-                        class="fa fa-trash delete-icon"
-                        style="
-                          font-size: 24px;
-                          color: red;
-                          cursor: pointer;
-                          margin-right: 10px;
-                        "
-                        (click)="deleteSchoolYear(schoolyear.id)"
-                      >
-                      </i>
-                      <i
-                        class="fa fa-edit edit-icon"
-                        style="font-size: 24px; color: red; cursor: pointer"
-                        (click)="showEditForm(schoolyear)"
-                      ></i>
-                    </td>
-                  </tr>
-                  <tr *ngIf="schoolyears.length === 0">
-                    <td colspan="6">no records found</td>
-                  </tr>
-                </tbody>
-              </table>
+                      <td>
+                        <!-- Icônes d'action pour la première ligne -->
+                        <i
+                          class="fa fa-trash delete-icon"
+                          style="
+                            font-size: 24px;
+                            color: red;
+                            cursor: pointer;
+                            margin-right: 10px;
+                          "
+                          (click)="deleteSchoolYear(schoolyear.id)"
+                        >
+                        </i>
+                        <i
+                          class="fa fa-edit edit-icon"
+                          style="font-size: 24px; color: red; cursor: pointer"
+                          (click)="showEditForm(schoolyear)"
+                        ></i>
+                      </td>
+                    </tr>
+                    <tr *ngIf="schoolyears.length === 0">
+                      <td colspan="6">no records found</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 

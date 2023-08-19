@@ -22,6 +22,7 @@ export class TableListCandidateComponent implements OnInit {
   editForm: FormGroup;
   showPassword: boolean = false;
   teams: any[] = [];
+  loading: boolean = true;
 
   // New properties to hold the template references
   @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
@@ -57,9 +58,11 @@ export class TableListCandidateComponent implements OnInit {
     this.candidateService.fetchCandidates().subscribe(
       (data) => {
         this.candidates = data; // Update the users array with the fetched data
+        this.loading = false;
       },
       (error) => {
         console.error("An error occurred while fetching the data:", error);
+        this.loading = false;
       }
     );
   }
@@ -69,7 +72,6 @@ export class TableListCandidateComponent implements OnInit {
     this.teamService.fetchTeams().subscribe(
       (response) => {
         this.teamOptions = response;
-        console.log("Team options:", this.teamOptions);
       },
       (error) => {
         console.error("Error fetching team options:", error);
@@ -81,7 +83,6 @@ export class TableListCandidateComponent implements OnInit {
   deleteCandidate(id: number) {
     this.candidateService.deleteCandidate(id).subscribe(
       () => {
-        console.log(`Candidate with ID ${id} deleted successfully.`);
         this.candidates = this.candidates.filter(
           (candidate) => candidate.id !== id
         );
@@ -109,7 +110,6 @@ export class TableListCandidateComponent implements OnInit {
 
   // Show the edit candidate form
   showEditForm(candidate: any) {
-    console.log("Editing candidate:", candidate);
     this.openModal(true);
     this.showEditFormRow = true;
     this.editCandidate = { ...candidate };
@@ -167,9 +167,6 @@ export class TableListCandidateComponent implements OnInit {
       const editedCandidate = this.editForm.value;
       this.candidateService.updateCandidate(editedCandidate).subscribe(
         () => {
-          console.log(
-            `User with ID ${editedCandidate.id} updated successfully.`
-          );
           this.showEditFormRow = false;
           this.editCandidate = {};
           this.fetchCandidates();
@@ -194,7 +191,6 @@ export class TableListCandidateComponent implements OnInit {
 
       this.candidateService.addCandidate(candidateData).subscribe(
         (response) => {
-          console.log("Success:", response);
           this.fetchCandidates();
         },
         (error) => {

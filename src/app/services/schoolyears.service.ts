@@ -1,22 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
 import Swal from "sweetalert2";
 import { environment } from "../../environments/environment";
 import { map } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SchoolyearsService {
   schoolyears: any[] = [];
   private apiUrlSchoolYear = "school/years";
-  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   fetchSchoolYears() {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiUrlSchoolYear}`);
+    return this.http.get<any[]>(
+      `${environment.apiUrl}/${this.apiUrlSchoolYear}`
+    );
   }
 
   addSchoolYear(formData: any): Observable<any> {
@@ -24,13 +26,50 @@ export class SchoolyearsService {
       annee: formData.annee,
     };
 
-    return this.http.post(`${this.apiUrl}/${this.apiUrlSchoolYear}`, schoolyear);
+    return this.http
+      .post(`${environment.apiUrl}/${this.apiUrlSchoolYear}`, schoolyear)
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "School year added successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error adding school year:", error);
+          throw error;
+        })
+      );
   }
 
   updateSchoolYear(schoolyear: any): Observable<any> {
     const schoolyearId = schoolyear.id;
 
-    return this.http.patch(`${this.apiUrl}/${this.apiUrlSchoolYear}/${schoolyearId}`, schoolyear);
+    return this.http
+      .patch(
+        `${environment.apiUrl}/${this.apiUrlSchoolYear}/${schoolyearId}`,
+        schoolyear
+      )
+      .pipe(
+        tap(() => {
+          // Display success message
+          Swal.fire({
+            icon: "success",
+            title: "School year updated successfully",
+            showConfirmButton: false,
+            timer: 2000, // Display for 2 seconds
+          });
+        }),
+        catchError((error) => {
+          // Handle error if needed
+          console.error("Error updating school year:", error);
+          throw error;
+        })
+      );
   }
 
   deleteSchoolYear(id: number): Observable<any> {
@@ -46,7 +85,7 @@ export class SchoolyearsService {
         if (result.isConfirmed) {
           // Use the map operator to return the result of the HTTP delete request
           this.http
-            .delete(`${this.apiUrl}/${this.apiUrlSchoolYear}/${id}`)
+            .delete(`${environment.apiUrl}/${this.apiUrlSchoolYear}/${id}`)
             .pipe(
               map((response) => {
                 // Resolve the observer with the response data
@@ -65,7 +104,7 @@ export class SchoolyearsService {
 
   fetchSchoolYearByYear(annee: string): Observable<any> {
     return this.http.get<any>(
-      `${this.apiUrl}/${this.apiUrlSchoolYear}/${annee}`
+      `${environment.apiUrl}/${this.apiUrlSchoolYear}/${annee}`
     );
   }
 }

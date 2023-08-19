@@ -24,6 +24,7 @@ export class TableListTeamComponent implements OnInit {
   editForm: FormGroup;
   errorMessage: string | null = null;
   inputFieldErrors: { [key: string]: string } = {};
+  loading: boolean = true;
 
   // New properties to hold the template references
   @ViewChild("addFormTemplate") addFormTemplate: TemplateRef<any>;
@@ -60,9 +61,11 @@ export class TableListTeamComponent implements OnInit {
     this.teamService.fetchTeams().subscribe(
       (data) => {
         this.teams = data; // Update the users array with the fetched data
+        this.loading = false;
       },
       (error) => {
         console.error("An error occurred while fetching the data:", error);
+        this.loading = false;
       }
     );
   }
@@ -72,7 +75,6 @@ export class TableListTeamComponent implements OnInit {
     this.subjectService.fetchSubjects().subscribe(
       (response) => {
         this.subjectOptions = response;
-        console.log("Subject options:", this.subjectOptions);
       },
       (error) => {
         console.error("Error fetching subject options:", error);
@@ -84,7 +86,6 @@ export class TableListTeamComponent implements OnInit {
   deleteTeam(id: number) {
     this.teamService.deleteTeam(id).subscribe(
       (response) => {
-        console.log("Deletion successful:", response);
         this.teams = this.teams.filter((team) => team.id !== id);
       },
       (error) => {
@@ -105,7 +106,6 @@ export class TableListTeamComponent implements OnInit {
 
   // Show Edit Form
   showEditForm(team: any) {
-    console.log("Editing team:", team);
     this.openModal(true);
     this.showEditFormRow = true;
     this.editTeam = { ...team };
@@ -132,7 +132,6 @@ export class TableListTeamComponent implements OnInit {
       const editedTeam = this.editForm.value;
       this.teamService.updateTeam(editedTeam).subscribe(
         () => {
-          console.log("Team with ID ${editedTeam.id} updated successfully.");
           this.showEditFormRow = false;
           this.editTeam = {};
           this.fetchTeams();
@@ -156,7 +155,6 @@ export class TableListTeamComponent implements OnInit {
 
       this.teamService.addTeam(teamData).subscribe(
         (response) => {
-          console.log("Success:", response);
           this.fetchTeams();
           this.errorMessage = null; // Clear any previous error message on success
           this.inputFieldErrors = {};
@@ -164,22 +162,18 @@ export class TableListTeamComponent implements OnInit {
         (error) => {
           console.error("Error:", error);
           if (error.error.errors && Array.isArray(error.error.errors)) {
-            this.errorMessage = error.error.errors[0]; // Set the first error message from the array
-            console.log("Error message:", this.errorMessage);
+            this.errorMessage = error.error.errors; // Set the first error message from the array
             this.inputFieldErrors = error.error.errors.reduce(
               (acc, errorMessage) => {
                 if (errorMessage.propertyPath) {
                   acc[errorMessage.propertyPath] = errorMessage.message;
-                  console.log(acc);
                 }
-                console.log(acc);
                 return acc;
               },
               {}
             );
           } else {
             this.errorMessage = "An error occurred during form submission."; // Fallback error message
-            console.log("Error message:", this.errorMessage);
           }
         }
       );
